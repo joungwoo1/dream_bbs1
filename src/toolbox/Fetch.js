@@ -2,8 +2,8 @@ import { useFetch } from "hooks/useFetch";
 
 
 export default function Fetch({uri, renderSuccess = f => f,
-    loadingFallBack = <p>loading...</p>},
-    renderError = ({err}) => (<pre>{JSON.stringify(err, null, 2)}</pre>)) {
+    loadingFallBack = <p>loading...</p>,
+    renderError = ({err}) => (<pre>{JSON.stringify(err, null, 2)}</pre>)}) {
 
     const {loading, data , error} = useFetch(uri);
 
