@@ -7,7 +7,6 @@ import { DisplayDate } from 'toolbox/DisplayDate';
 
 export default function ReplyList({ parent }) {
     const { auth } = useContext(AppContext);
-    const ReplyList = ''
 
     const [justCreatedReplyList, setJustCreatedReplyList] = useState([]);
     const [openAddReply] = useState(new Map());//리플 확인 체크용
@@ -21,10 +20,11 @@ export default function ReplyList({ parent }) {
         replyOnReply.set(replyId, content);//포스트 아이디
         setRenderCount(renderCount + 1);
     }
-
-    function onInputStarScore(starScore){
-        setStarScore(starScore);
+    
+    const getStarScore = (num) =>{
+    	setStarScore(num);
     }
+    console.log('starScore',starScore)
 
     function markShowAddReply(e, replyId) {
         openAddReply.set(replyId, 1);
@@ -90,15 +90,18 @@ export default function ReplyList({ parent }) {
     return <>
         {auth.userNick ?
             <Button variant='primary' onClick={(e) => { markShowAddReply(e, parent.id) }}>댓글</Button> : ''}
+
+
         {openAddReply.has(parent.id) ?
             <NewReply auth={auth} reply={parent} replyOnReply={replyOnReply}
-                onInputReplyContent={onInputReplyContent} manageReply={manageReply} onInputStarScore={onInputStarScore} /> : ''}
+                onInputReplyContent={onInputReplyContent} manageReply={manageReply} getStarScore={getStarScore} /> : ''}
         <ul>
             {parent.listReply?.map((reply) => {
                 return <li key={reply.id}>
-                    <p>작성자 <span>{reply.writer ? reply.writer.nick : ""} </span></p>
-                    답글 : <span>{reply.content}</span>
-                    <p><span>{DisplayDate(reply.regDt, reply.uptDt)} </span></p>
+                    <p>작성자: <span>{reply.writer ? reply.writer.nick : ""} 별점{reply.starScore}점 </span></p>
+
+                    <p><span>답글 :{reply.content} </span>
+                    <span>{DisplayDate(reply.regDt, reply.uptDt)} </span></p>
                 </li>
             })}
         </ul>

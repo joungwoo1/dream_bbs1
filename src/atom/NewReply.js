@@ -2,21 +2,35 @@ import Button from 'react-bootstrap/Button';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import StarRating from 'StarDraw/StarRating';
+import { useState } from 'react';
 
-export default function NewReply({auth, reply, replyOnReply, onInputReplyContent, manageReply, onInputStarScore}) {
+export default function NewReply({auth, reply, replyOnReply, onInputReplyContent, manageReply, getStarScore}) {    
+    const [starsValue , setStarsValue] = useState("");
+
+    const getStarsValue = (num) => {
+    	setStarsValue(num);
+        sandStarsScore(starsValue)
+    }
+    
+    console.log(starsValue)
+    
+
+    const sandStarsScore =(props)=> {
+        
+        getStarScore(starsValue)
+    };
+
     if (!auth.userNick) {
         return;
     }
+    
     return (
         <Container>
             <Row>
                 <Col>댓글 달기</Col>
             </Row>
-            <input type="range"
-            id="starScore"
-            min="0" max="5"
-            onChange={(e) => onInputStarScore(e.target.value)}
-            size="10" />
+            <StarRating style={""} getStarsValue={getStarsValue} />
             <Row>
                 <Col sm={10}>
                     <input placeholder='댓글 달기'

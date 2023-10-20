@@ -123,7 +123,7 @@ export default function PostManage() {
 				value={"액션/무협"}
 				onChange={checkGenre}
 				id={`inline-checkbox-1`}
-				checked={contentGenre.includes("액션/무협")}
+				checked={contentGenre?.includes("액션/무협")}
 			/>
 			<Form.Check
 				inline
@@ -133,7 +133,7 @@ export default function PostManage() {
 				value={"모험"}
 				onChange={checkGenre}
 				id={`inline-checkbox-2`}
-				checked={contentGenre.includes("모험")}
+				checked={contentGenre?.includes("모험")}
 			/>
 			<Form.Check
 				inline
@@ -143,7 +143,7 @@ export default function PostManage() {
 				value={"판타지"}
 				onChange={checkGenre}
 				id={`inline-checkbox-3`}
-				checked={contentGenre.includes("판타지")}
+				checked={contentGenre?.includes("판타지")}
 			/>
 
 			<Form.Check
@@ -154,7 +154,7 @@ export default function PostManage() {
 				value={"공상"}
 				onChange={checkGenre}
 				id={`inline-checkbox-4`}
-				checked={contentGenre.includes("공상")}
+				checked={contentGenre?.includes("공상")}
 			/>
 			<Form.Check
 				inline
@@ -164,7 +164,7 @@ export default function PostManage() {
 				value={"과학(SF)"}
 				onChange={checkGenre}
 				id={`inline-checkbox-5`}
-				checked={contentGenre.includes("과학(SF)")}
+				checked={contentGenre?.includes("과학(SF)")}
 			/>
 			<Form.Check
 				inline
@@ -174,7 +174,7 @@ export default function PostManage() {
 				value={"누아르"}
 				onChange={checkGenre}
 				id={`inline-checkbox-6`}
-				checked={contentGenre.includes("누아르")}
+				checked={contentGenre?.includes("누아르")}
 			/>
 			<Form.Check
 				inline
@@ -184,7 +184,7 @@ export default function PostManage() {
 				value={"전쟁"}
 				onChange={checkGenre}
 				id={`inline-checkbox-7`}
-				checked={contentGenre.includes("전쟁")}
+				checked={contentGenre?.includes("전쟁")}
 			/>
 			<Form.Check
 				inline
@@ -194,7 +194,7 @@ export default function PostManage() {
 				value={"코미디"}
 				onChange={checkGenre}
 				id={`inline-checkbox-8`}
-				checked={contentGenre.includes("코미디")}
+				checked={contentGenre?.includes("코미디")}
 			/>
 		</div>
         <Form.Check
