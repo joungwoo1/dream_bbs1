@@ -9,6 +9,7 @@ export default function ThumbnailList({ imgDtoList }) {
         const imgUrl = (window.URL || window.webkitURL).createObjectURL(thumbFile);
         return <OriginalFileView imgUrl={imgUrl} afdto={afdto} />
     }
+    
 
     return <>
         {imgDtoList?.map(afdto => {
