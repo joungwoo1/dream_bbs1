@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { useContext, useEffect, useRef, useState } from "react";
+import { useContext, useRef, useState } from "react";
 import { DisplayDate } from "toolbox/DisplayDate";
 import { Fetch } from "toolbox/Fetch";
 
@@ -109,6 +109,7 @@ export default function PostList() {
                     영상 등록
                 </Link> : null
             }
+            
             <Fetch uri={postListUri} renderSuccess={renderSuccess} />
         </div>
     );

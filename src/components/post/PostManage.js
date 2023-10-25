@@ -24,8 +24,8 @@ export default function PostManage() {
 
     const [hasAllContents, setHasAllContents] = useState();
     useEffect(() => {
-        setHasAllContents(title?.trim() ? content?.trim() : false);
-    }, [title, content])
+        setHasAllContents(title?.trim() && content?.trim() && contentGenre?.trim() && ageLimit?.trim() ? true : false);
+    }, [title, content, contentGenre, ageLimit ])
 
 	function checkGenre(e) {
 		let files = '';
@@ -38,8 +38,6 @@ export default function PostManage() {
 		});
 		setContentGenre(files)
 	};
-	console.log(ageLimit)
-	console.log(contentGenre)
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -85,7 +83,7 @@ export default function PostManage() {
     const handleDelete = async (e) => {
         e.preventDefault();
         try {
-            const data = await axios.delete(`/post/${post.id}`,
+            await axios.delete(`/post/${post.id}`,
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -101,6 +99,39 @@ export default function PostManage() {
         }
     }
 
+	const genreHtml =() =>{
+		let array=["액션/무협","모험","판타지","공상","과학(SF)","누아르","전쟁","코미디"]
+		return <>{array.map((n,i) => (
+			<Form.Check
+			inline
+			label={array[i]}
+			name="checkGenre"
+			type="checkbox"
+			value={array[i]}
+			onChange={checkGenre}
+			id={`inline-checkbox-${1+i}`}
+			checked={contentGenre?.includes(array[i])}
+			/>))
+		}</>
+	}
+
+	const ageHtml = () =>{
+		let array=["전체 이용가","12세 이상","15세 이상","18세 이상"]
+		return <>{array.map((n,i) => (
+			<Form.Check
+			inline
+			label={array[i]}
+			name="userSex"
+			type="radio"
+			value={i}
+			onChange={(e) => setAgeLimit(e.target.value)}
+			id={`inline-radio-${1+i}`}
+			checked={ageLimit == i}
+		/>))
+		}</>
+	}
+
+
     return <Form>
         <h5>영상 등록</h5>
         <Form.Group className="mb-3">
@@ -115,128 +146,9 @@ export default function PostManage() {
             />
         </Form.Group>
         <div key={`inline-checkbox`} className="mb-3" defaultChecked={post.genre}>
-			<Form.Check
-				inline
-				label="액션/무협"
-				name="checkGenre"
-				type="checkbox"
-				value={"액션/무협"}
-				onChange={checkGenre}
-				id={`inline-checkbox-1`}
-				checked={contentGenre?.includes("액션/무협")}
-			/>
-			<Form.Check
-				inline
-				label="모험"
-				name="checkGenre"
-				type="checkbox"
-				value={"모험"}
-				onChange={checkGenre}
-				id={`inline-checkbox-2`}
-				checked={contentGenre?.includes("모험")}
-			/>
-			<Form.Check
-				inline
-				label="판타지"
-				name="checkGenre"
-				type="checkbox"
-				value={"판타지"}
-				onChange={checkGenre}
-				id={`inline-checkbox-3`}
-				checked={contentGenre?.includes("판타지")}
-			/>
-
-			<Form.Check
-				inline
-				label="공상"
-				name="checkGenre"
-				type="checkbox"
-				value={"공상"}
-				onChange={checkGenre}
-				id={`inline-checkbox-4`}
-				checked={contentGenre?.includes("공상")}
-			/>
-			<Form.Check
-				inline
-				label="과학(SF)"
-				name="checkGenre"
-				type="checkbox"
-				value={"과학(SF)"}
-				onChange={checkGenre}
-				id={`inline-checkbox-5`}
-				checked={contentGenre?.includes("과학(SF)")}
-			/>
-			<Form.Check
-				inline
-				label="누아르"
-				name="checkGenre"
-				type="checkbox"
-				value={"누아르"}
-				onChange={checkGenre}
-				id={`inline-checkbox-6`}
-				checked={contentGenre?.includes("누아르")}
-			/>
-			<Form.Check
-				inline
-				label="전쟁"
-				name="checkGenre"
-				type="checkbox"
-				value={"전쟁"}
-				onChange={checkGenre}
-				id={`inline-checkbox-7`}
-				checked={contentGenre?.includes("전쟁")}
-			/>
-			<Form.Check
-				inline
-				label="코미디"
-				name="checkGenre"
-				type="checkbox"
-				value={"코미디"}
-				onChange={checkGenre}
-				id={`inline-checkbox-8`}
-				checked={contentGenre?.includes("코미디")}
-			/>
+		{genreHtml()}
 		</div>
-        <Form.Check
-						inline
-						label="전체 이용가"
-						name="userSex"
-						type="radio"
-						value={0}
-						onChange={(e) => setAgeLimit(e.target.value)}
-						id={`inline-radio-1`}
-						checked={ageLimit == 0}
-					/>
-					<Form.Check
-						inline
-						label="12세 이상"
-						name="userSex"
-						type="radio"
-						onChange={(e) => setAgeLimit(e.target.value)}
-						value={1}
-						id={`inline-radio-2`}
-						checked={ageLimit == 1}
-					/>
-					<Form.Check
-						inline
-						label="15세 이상"
-						name="userSex"
-						type="radio"
-						onChange={(e) => setAgeLimit(e.target.value)}
-						value={2}
-						id={`inline-radio-3`}
-						checked={ageLimit == 2}
-					/>
-					<Form.Check
-						inline
-						label="18세 이상"
-						name="userSex"
-						type="radio"
-						onChange={(e) => setAgeLimit(e.target.value)}
-						value={3}
-						id={`inline-radio-4`}
-						checked={ageLimit == 3}
-					/>
+		{ageHtml()}
         <ThumbnailList imgDtoList={listAttach} />
         <AttachedFileList writer={auth} listAttach={listAttach} setListAttach={setListAttach} />
         
@@ -256,8 +168,9 @@ export default function PostManage() {
             disabled={!hasAllContents}>
             등록
         </Button>
+        { post.id ?
         <Button variant="danger" onClick={handleDelete} style={{ float: 'right', margin: '10px' }}>
             삭제
-        </Button>
+        </Button>:""}
     </Form>
 }
