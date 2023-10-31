@@ -1,5 +1,5 @@
 import AppContext from 'context/AppContextProvider';
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { DisplayDate, MembershipDate } from 'toolbox/DisplayDate';
 import { Fetch } from 'toolbox/Fetch';
@@ -23,7 +23,6 @@ export default function PostDetail() {
     const userId = auth.userId;
     const postId = state.id;
     const interval = 5000; // 5초마다 함수 실행
-
     const isPaid = MembershipDate(auth.membership) >= 0;
 
     useInterval(async () => {

@@ -1,5 +1,6 @@
 import StarRating from 'StarDraw/StarRating';
 import axios from "api/axios";
+import PostDetail from 'components/post/PostDetail';
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';

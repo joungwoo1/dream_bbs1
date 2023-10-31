@@ -1,5 +1,5 @@
 import { useFetch, usePost } from "hooks/UseFetch";
-
+//uri에 있는 값을 renderSuccess로 값 받아오기
 function Fetch({ uri, renderSuccess = f => f,
     loadingFallBack = <p>loading...</p>,
     renderError = ({ err }) => (<pre>{JSON.stringify(err, null, 2)}</pre>) }) {
