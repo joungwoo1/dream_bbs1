@@ -28,9 +28,6 @@ export default function UpdateReply({auth, parent, getStarScore, onInputReplyCon
         return;
     }
 
-
-
-
     return (
         <Container>
         <Row>

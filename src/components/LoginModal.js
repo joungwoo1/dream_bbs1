@@ -5,22 +5,19 @@ import Modal from 'react-bootstrap/Modal';
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
 import { findAgeLimit } from 'toolbox/MovieInfo';
-
 import AppContext from 'context/AppContextProvider';
 
 export default function LoginModal() {
     const { auth, setAuth } = useContext(AppContext);
     let userNickRef = useRef();
-
     const [userNick, setUserNick] = useState('');
     const [pwd, setPwd] = useState('');
     const [errMsg, setErrMsg] = useState('');
-
     const [error, setError] = useState(false);
-
     const [showLogin, setShowLogin] = useState(false);
     const handleCloseLogin = () => setShowLogin(false);
     const handleShowLogin = () => setShowLogin(true);
+    
 
     /* 맨 처음 뜰 때만... 사용자 ID 받는 곳에 focus 준다.
     useEffect(() => {
@@ -36,7 +33,7 @@ export default function LoginModal() {
     /*
       async await에 대한... error 처리는 보류중
     */
-    async function signIn() {
+      async function signIn() {
         const jsonData = await fetch(`http://localhost:8080/sign-api/sign-in`, {
             method: "post",
             headers: {
@@ -53,6 +50,8 @@ export default function LoginModal() {
         var signInResult;
         try {
             signInResult = await signIn();
+            console.log("login success");
+
             const accessToken = signInResult.token;
             const userId = signInResult.userId;
             const userName = signInResult.userName;
@@ -60,32 +59,35 @@ export default function LoginModal() {
             const roles = signInResult.roles;
             const membership = signInResult.membership;
             const penalty = signInResult.penalty;
+
             const birth = new Date(signInResult.birth);
             const today = new Date();
             const birthString = birth.getFullYear().toString() + (birth.getMonth() + 10).toString() + (birth.getDate() + 10).toString();
             const todayString = today.getFullYear().toString() + (today.getMonth() + 10).toString() + (today.getDate() + 10).toString();
+
             const userAge = Math.floor((Number(todayString) - Number(birthString)) / 10000);
+
             const ageLimit = findAgeLimit(userAge, 0);
 
             setAuth({ accessToken, userId, userName, userNick, roles, membership, ageLimit, penalty });
+            window.sessionStorage.setItem("asd", JSON.stringify({ accessToken, userId, userName, userNick, roles, membership, ageLimit, penalty }));
             setUserNick('');
             setPwd('');
             setShowLogin(false);
-            console.log("login success");
         } catch (error) {
+            console.log("fail");
+            console.log(error.message);
             setError(true);
             setErrMsg('Login Failed');
             setAuth({});
             setShowLogin(true);
-            console.log(error.message);
-            console.log("fail");
         }
     }
-
     const handleLogout = (e) => {
         e.preventDefault();
         setAuth({});
         setShowLogin(false);
+        sessionStorage.removeItem("asd");
         window.location.replace("/");
     };
 

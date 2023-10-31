@@ -3,7 +3,9 @@ import { createContext, useState } from "react";
 const AppContext = createContext({});
 
 export const AppContextProvider = ({ children }) => {
-    const [auth, setAuth] = useState({});
+    let User = window.sessionStorage.getItem("asd");
+
+    const [auth, setAuth] = useState(User ? JSON.parse(User) : "");
     const [codeList, setCodeList] = useState();
 
     return (

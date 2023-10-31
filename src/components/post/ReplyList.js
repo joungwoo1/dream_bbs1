@@ -113,7 +113,7 @@ export default function ReplyList({ parent }) {
 		} catch (err) {
 			console.log('postStarScore Failed');
 		}
-        window.location.replace(`/post/${state.id}`);  //페이지 새로고침
+        window.location.replace(`/anonymous/getPost/${postId}`);  //페이지 새로고침
 	}
 
     /* 삭제 버튼 기능 */
