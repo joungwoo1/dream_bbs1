@@ -3,7 +3,7 @@ import { FaStar } from "react-icons/fa";
 
 /* 별찍기 */
 
-export default function StarRating({style = {}, totalStars=5, getStarsValue =f=>f, disabled=true}) {
+export default function StarRating({style = {}, totalStars=5, getStarsValue =f=>f, disabled=true }) {
   const [selectedStars, setSelectedStars] = useState(5);
   const createArray = (len) => [...Array(len)];
   const Star = ({ selected = false, onSelect = f=> f}) =>(
@@ -14,6 +14,7 @@ export default function StarRating({style = {}, totalStars=5, getStarsValue =f=>
   const sandStarsValue =(props)=> {
     getStarsValue(selectedStars);
   }
+  
   
   /* 별점 선택 온오프 기능 */
   const ChoseStar=(disabled) =>{

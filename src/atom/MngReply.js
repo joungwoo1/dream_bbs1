@@ -6,10 +6,9 @@ import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 
-export default function MngReply({auth, reply, replyOnReply, onInputReplyContent, manageReply, getStarScore}) {    
+export default function MngReply({auth, parent, replyOnReply, onInputReplyContent, manageReply, getStarScore}) {    
 
     const [starsValue , setStarsValue] = useState("");
-    const [savedReple , setSavedReple] = useState([]);//저장된 댓글 불러오는용도
 
 
     /* 별점 받는 곳 콜백함수 */
@@ -26,7 +25,7 @@ export default function MngReply({auth, reply, replyOnReply, onInputReplyContent
     if (!auth.userNick) {
         return;
     }
-    console.log(reply)
+    console.log(parent)
     /* 기존 댓글 가져오기 기능 */
     const checkedReple = () => {
         
@@ -36,7 +35,7 @@ export default function MngReply({auth, reply, replyOnReply, onInputReplyContent
     const handleDelete = async (e) => {
         e.preventDefault();
         try {
-            await axios.delete(`/post/${reply.id}`,
+            await axios.delete(`/post/${parent.id}`,
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -62,17 +61,17 @@ export default function MngReply({auth, reply, replyOnReply, onInputReplyContent
         <Row>
             <Col sm={10}>
                 <input placeholder='댓글 달기'
-                    value={replyOnReply.get(reply.id)}
+                    value={replyOnReply.get(parent.id)}
                     style={{ height: "100%", width: "100%" }}
-                    onInput={(e) => onInputReplyContent(e, reply.id)} />
+                    onInput={(e) => onInputReplyContent(e, parent.id)} />
             </Col>
 
             <Col sm>
-            { reply.id.length > 5 ?
+            { parent.id.length > 5 ?
         <Button variant="danger" onClick={handleDelete} style={{ float: 'right', margin: '10px' }}>
             삭제
         </Button>:""}
-                <Button variant="primary" onClick={(e) => { manageReply(e, reply.id) }}>적용</Button></Col>
+                <Button variant="primary" onClick={(e) => { manageReply(e, parent.id) }}>적용</Button></Col>
         </Row>
     </Container>
     )

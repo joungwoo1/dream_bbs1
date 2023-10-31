@@ -1,21 +1,23 @@
-import axios from 'api/axios';
 import AppContext from 'context/AppContextProvider';
 import { useContext } from 'react';
-import { DisplayDate } from 'toolbox/DisplayDate';
+import { Link } from 'react-router-dom';
+import { DisplayDate, MembershipDate } from 'toolbox/DisplayDate';
 import { Fetch } from "toolbox/Fetch";
 
 export default function RecentMovie() {
     const { auth } = useContext(AppContext);
     const listAllRecentMoviesUri = `http://localhost:8080/user/anonymous/listAllRecentMovies?userId=${auth.userId}`;
 
+    const isPaid = MembershipDate(auth.membership) >= 0;
+
     return (
         <div>
+            {isPaid ? '' : <h5 style={{ margin: '20px', color: 'red' }}>※멤버쉽 구독 중이 아닐 경우 시청 현황은 갱신되지 않습니다.</h5>}
             <table style={{ margin: '20px' }}>
                 <thead>
                     <tr>
                         <th>제목</th>
-                        <th>최근에 본 날</th>
-                        <th>장르</th>
+                        <th>&nbsp;&nbsp;최근에 본 날</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -29,22 +31,13 @@ export default function RecentMovie() {
         return <>
             {movieList?.map(movie => (
                 <tr key={movie.movieId}>
-                    <td>{findMovie(movie.movieId, 'title')}</td>
-                    <td>{DisplayDate(movie.regDt, movie.uptDt)}</td>
-                    <td>{findMovie(movie.movieId, 'genre')}</td>
+                    <Link key={movie.movieId} to={`/post`}
+                        state={{ id: movie.movieId }}>
+                        {movie.movieTitle}
+                    </Link>
+                    <td>&nbsp;&nbsp;{DisplayDate(movie.regDt, movie.uptDt)}</td>
                 </tr>
             ))}
         </>;
-    }
-}
-
-const findMovie = async (movieId, toFind) => {
-    const response = await axios.get(`/post/anonymous/getPost?id=${movieId}`);
-    if (toFind === 'title') {
-        return response?.title;
-    } else if (toFind === 'genre') {
-        return response?.genre;
-    } else {
-        return null;
     }
 }

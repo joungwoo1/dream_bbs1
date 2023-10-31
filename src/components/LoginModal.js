@@ -4,6 +4,7 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import ReactDOM from 'react-dom';
 import { Link } from 'react-router-dom';
+import { findAgeLimit } from 'toolbox/MovieInfo';
 
 import AppContext from 'context/AppContextProvider';
 
@@ -69,7 +70,7 @@ export default function LoginModal() {
 
             const userAge = Math.floor((Number(todayString) - Number(birthString)) / 10000);
 
-            const ageLimit = userAge >= 18 ? 3 : userAge >= 15 ? 2 : userAge >= 12 ? 1 : 0;
+            const ageLimit = findAgeLimit(userAge, 0);
 
             setAuth({ accessToken, userId, userName, userNick, roles, membership, ageLimit, penalty });
             setUserNick('');

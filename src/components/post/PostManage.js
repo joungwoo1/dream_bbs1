@@ -6,6 +6,7 @@ import Form from 'react-bootstrap/Form';
 import AppContext from 'context/AppContextProvider';
 import AttachedFileList from "atom/AttachedFileList";
 import ThumbnailList from "atom/ThumbnailList";
+import { listAgeLimit, listGenre } from "toolbox/MovieInfo";
 
 export default function PostManage() {
     const location = useLocation();
@@ -26,6 +27,8 @@ export default function PostManage() {
     useEffect(() => {
         setHasAllContents(title?.trim() && content?.trim() && contentGenre?.trim() && ageLimit?.trim() ? true : false);
     }, [title, content, contentGenre, ageLimit ])
+
+
 
 	function checkGenre(e) {
 		let files = '';
@@ -100,27 +103,25 @@ export default function PostManage() {
     }
 
 	const genreHtml =() =>{
-		let array=["액션/무협","모험","판타지","공상","과학(SF)","누아르","전쟁","코미디"]
-		return <>{array.map((n,i) => (
+		return <>{listGenre.map((genre,i) => (
 			<Form.Check
 			inline
-			label={array[i]}
+			label={genre}
 			name="checkGenre"
 			type="checkbox"
-			value={array[i]}
+			value={genre}
 			onChange={checkGenre}
 			id={`inline-checkbox-${1+i}`}
-			checked={contentGenre?.includes(array[i])}
+			checked={contentGenre?.includes(genre)}
 			/>))
 		}</>
 	}
 
 	const ageHtml = () =>{
-		let array=["전체 이용가","12세 이상","15세 이상","18세 이상"]
-		return <>{array.map((n,i) => (
+		return <>{listAgeLimit.map((age,i) => (
 			<Form.Check
 			inline
-			label={array[i]}
+			label={age.name}
 			name="userSex"
 			type="radio"
 			value={i}

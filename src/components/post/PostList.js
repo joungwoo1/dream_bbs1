@@ -67,7 +67,7 @@ export default function PostList() {
         const postList = postListWithPaging.firstVal;
         const pagination = postListWithPaging?.secondVal;
         return <>
-           <table>
+           <table style={{ margin: '20px' }}>
                 <thead>
                     <tr>
                         <th>제목</th>
@@ -81,14 +81,14 @@ export default function PostList() {
                     {postList?.map(post => (
                         <tr key={post.id}>
                             <td>
+                            {(!auth?.ageLimit && post.ageLimit < 3) || (post.ageLimit <= auth?.ageLimit) ?
                                 <Link key={post.id} to={`/post`}
-                                      state={{ id:post.id, boardId:state.boardId, page: state.page, search: txtSearch.current?.value, postListWithPaging}}>
-                                    &nbsp;&nbsp;{post.title}
-                                </Link>
+                                    state={{ id: post.id, boardId: state.boardId, page: state.page, search: txtSearch.current?.value, postListWithPaging }}>
+                                    {post.title}
+                                </Link> : '연령 제한 콘텐츠'}
                             </td>
-                            <td>{post.writer ? post.writer.name : ""}</td>
-                            <td>{post.readCnt}</td>
-                            <td>최종작성일 : <span>{DisplayDate(post.regDt, post.uptDt)} </span></td>
+                            <td>&nbsp;&nbsp;{post.readCnt}</td>
+                            <td>&nbsp;&nbsp;{DisplayDate(post.regDt, post.uptDt)}</td>
                         </tr>
                     ))}
                 </tbody>

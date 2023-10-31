@@ -4,20 +4,24 @@ import { useContext, useState } from "react";
 import { Button, Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { MembershipDate } from 'toolbox/DisplayDate';
+import { findFavoriteGenre, listAgeLimit } from 'toolbox/MovieInfo';
+import { Fetch } from "toolbox/Fetch";
 
 export default function Mypage() {
     const { auth, setAuth } = useContext(AppContext);
 
-    const [membership, setMembership] = useState(new Date(auth.membership));
-    const isPaid = MembershipDate(membership) >= 0;
+    const listRecentMoviesGenreUri = `http://localhost:8080/user/anonymous/listRecentMoviesGenre?userId=${auth.userId}`;
 
     const accessToken = auth.accessToken;
     const userId = auth.userId;
     const userName = auth.userName;
     const userNick = auth.userNick;
     const roles = auth.roles;
+    const membership = new Date(auth.membership);
     const ageLimit = auth.ageLimit;
     const penalty = auth.penalty;
+
+    const isPaid = MembershipDate(membership) >= 0;
 
     const today = new Date().getDate();
     const membershipDay = membership.getDate();
@@ -36,8 +40,7 @@ export default function Mypage() {
         } catch (err) {
             console.log('Error?');
         }
-        setMembership(bodyData.membership);
-        setAuth({ accessToken, userId, userName, userNick, roles, membership, ageLimit, penalty });
+        setAuth({ accessToken, userId, userName, userNick, roles, membership: bodyData.membership, ageLimit, penalty });
     }
 
     const inactiveAccount = async (e, userId) => {
@@ -70,12 +73,13 @@ export default function Mypage() {
             &nbsp;<Button variant='outline-danger' onClick={(e) => { updateMembership(e, '1900-01-01') }}>디버깅용 멤버쉽 취소 버튼</Button>
         </>
         : <>
-            당신은 현재 {ageLimit === 3 ? '성인' : ageLimit === 2 ? '15세 이상' : ageLimit === 1 ? '12세 이상' : '어린이'} 회원입니다.<br /><br />
+            당신은 현재 {listAgeLimit[ageLimit]?.name} 관람가 회원입니다.<br /><br />
             {membershipLeft()}<br />
             <Button variant='success'
                 onClick={(e) => { updateMembership(e, MembershipDate(membership) < 0 ? new Date().setDate(today + 1) : membership.setDate(membershipDay + 1)) }}>
                 하루 멤버쉽{isPaid ? ' 연장' : ' 구독'}
             </Button><br /><br />
+            <Fetch uri={listRecentMoviesGenreUri} renderSuccess={findFavoriteGenre} /><br /><br />
             <Button variant='dark' onClick={handleShowInactive} style={{ float: 'right', margin: '10px' }}>회원탈퇴</Button>
 
             <Modal show={showInactive} onHide={handleCloseInactive}>
@@ -84,8 +88,11 @@ export default function Mypage() {
                     </Modal.Header>
                     <Modal.Body>
                         '예'를 누르시면 즉시 회원탈퇴 절차가 진행됩니다.<br />
-                        멤버쉽 취소 절차를 거치지 않을 경우 환불이 불가능하므로<br />반드시 멤버쉽 취소 후 진행해주세요.<br /><br />
-                        이후 1년 안에<br />같은 생년월일, 성별, 이메일로 재가입하지 않을 경우<br />계정정보가 완전 삭제됩니다.
+                        <th style={{ color: 'red' }}>멤버쉽 취소 절차를 거치지 않을 경우 환불이 불가능하므로</th>
+                        반드시 멤버쉽 취소 후 진행해주세요.<br /><br />
+                        이후 1년 안에 같은 이메일로 재가입하지 않을 경우<br />
+                        <th style={{ color: 'red' }}>계정정보가 완전 삭제됩니다.</th><br />
+                        또한, <th style={{ color: 'red' }}>경고받은 횟수는 재가입해도 초기화되지 않습니다.</th>
                     </Modal.Body>
                     <Modal.Footer>
                         <Button variant="danger" onClick={(e) => inactiveAccount(e, userId)}>

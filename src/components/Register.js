@@ -6,7 +6,6 @@ import { FormSelect } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 
 const Register = () => {
-
     const [userName, setUserName] = useState('');
     const [userNick, setUserNick] = useState('');
 
@@ -17,7 +16,9 @@ const Register = () => {
     const [userBirth, setUserBirth] = useState();
     const [userSex, setUserSex] = useState();
     const [userAddress, setUserAddress] = useState();
+
     const [userEmail, setUserEmail] = useState();
+    const [userDomain, setUserDomain] = useState();
 
     const [success, setSuccess] = useState(false);
 
@@ -77,7 +78,7 @@ const Register = () => {
             birth: userBirth,
             sex: userSex,
             address: userAddress,
-            email: userEmail
+            email: userEmail + '@' + userDomain
         };
 
         console.log(bodyData)
@@ -100,6 +101,19 @@ const Register = () => {
         }
     }
 
+    const changeDomain = (domain) => {
+        const domainInputEl = document.querySelector('#domain-txt');
+        if (domain === "type") {
+            domainInputEl.value = "";
+            setUserDomain("");
+            domainInputEl.disabled = false;
+        } else {
+            domainInputEl.value = domain;
+            setUserDomain(domain);
+            domainInputEl.disabled = true;
+        }
+    }
+
     return success ? (
         <section style={{ margin: '100px' }}>
             <h1>회원가입이 완료되었습니다!</h1>
@@ -109,7 +123,7 @@ const Register = () => {
             </p>
         </section>
     ) : (
-        <Form style={{ margin: '50px'}}>
+        <Form style={{ margin: '50px' }}>
             <Form.Group className="mb-3">
                 <Form.Label htmlFor="userName">이름:</Form.Label>
                 <Form.Control
@@ -192,18 +206,29 @@ const Register = () => {
                 </FormSelect>
             </Form.Group>
             <Form.Group className="mb-3">
-                <Form.Label htmlFor="userEmail">이메일:</Form.Label>
-                <Form.Control
+                <Form.Label htmlFor="userEmail">이메일:&nbsp;</Form.Label>
+                <input class="box"
                     type="text"
                     id="userEmail"
                     onChange={(e) => setUserEmail(e.target.value)}
                     required
                 />
+                @
+                <input class="box" id="domain-txt" type="text" onChange={(e) => setUserDomain(e.target.value)} required />
+                <select class="box" id="domain-list" onChange={(e) => changeDomain(e.target.value)}>
+                    <option value="type">직접 입력</option>
+                    <option value="naver.com">naver.com</option>
+                    <option value="google.com">google.com</option>
+                    <option value="hanmail.net">hanmail.net</option>
+                    <option value="nate.com">nate.com</option>
+                    <option value="kakao.com">kakao.com</option>
+                </select>
             </Form.Group>
             <Button variant="primary" onClick={handleSubmit} style={{ float: 'right', margin: '10px' }}
-                disabled={!validMatch || !userName || !userNick || !userBirth || !userSex || !userAddress || !userEmail}>
+                disabled={!validMatch || !userName || !userNick || !userBirth || !userSex || !userAddress || !userEmail || !userDomain}>
                 입력완료
             </Button>
+
         </Form>
     )
 }

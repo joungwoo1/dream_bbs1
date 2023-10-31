@@ -6,7 +6,7 @@ import Register from 'components/Register';
 import ManagerPage from 'components/ManagerPage';
 import Mypage from 'components/Mypage';
 import { Route, Routes } from 'react-router-dom';
-import RecentMovie from 'components/RecentMovie(not_completed)';
+import RecentMovie from 'components/RecentMovie';
 import MainPage from 'page/MainPage';
 
 export default function BBSRouter() {
