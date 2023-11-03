@@ -1,6 +1,4 @@
 import StarRating from 'StarDraw/StarRating';
-import axios from "api/axios";
-import PostDetail from 'components/post/PostDetail';
 import { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Col from 'react-bootstrap/Col';
@@ -8,10 +6,10 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 
 export default function UpdateReply({auth, parent, getStarScore, onInputReplyContent, bringInputReplyContent, 
-    manageReply, handleDelete}) {    
+    manageReply, handleDelete, bringInputStarScore}) {    
 
-    let [starsValue , setStarsValue] = useState("");
-
+    let [starsValue , setStarsValue] = useState();
+    
 
     /* 별점 받는 곳 콜백함수 */
     const getStarsValue = (num) => {
@@ -33,14 +31,14 @@ export default function UpdateReply({auth, parent, getStarScore, onInputReplyCon
         <Row>
             <Col>{auth.userNick}
         {/*별 그리기 및 별점 받아오기 */}
-        <StarRating style={""} getStarsValue={getStarsValue} disabled={false}/></Col>
+        <StarRating style={""} getStarsValue={getStarsValue} disabled={false} startStar={bringInputStarScore}/></Col>
         </Row>
         {/*이벤트 써서 갱신 */}
         {document.addEventListener('click',sandStarsScore(starsValue))}
         <Row>
             <Col sm={10}>
-                <input placeholder='댓글 달기'
-                    defaultValue={bringInputReplyContent(parent.id)}
+                <input placeholder='댓글'
+                    defaultValue={bringInputReplyContent()}
                     style={{ height: "100%", width: "100%" }}
                     onInput={(e) => onInputReplyContent(e, parent.id)} />
             </Col>

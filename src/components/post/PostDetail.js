@@ -25,6 +25,8 @@ export default function PostDetail() {
     const interval = 5000; // 5초마다 함수 실행
     const isPaid = MembershipDate(auth.membership) >= 0;
 
+    
+
     useInterval(async () => {
         if (!isPaid) {
             return;
@@ -62,11 +64,10 @@ export default function PostDetail() {
                 <p>줄거리: {post.content}</p>
                 <p>조회수: <span>{post.readCnt}회</span>
                 <span> 개봉일: {DisplayDate(post.regDt, post.uptDt)} </span></p>
-                <div>등록닉네임 : {post.writer ? post.writer.nick : ""}&nbsp;&nbsp;&nbsp;&nbsp;
-                <StarRating totalStars={1} float="left" disabled={true}/>{post.starScore}</div>
+                <div>등록닉네임 : {post.writer ? post.writer.nick : ""}&nbsp;&nbsp;&nbsp;&nbsp;별점: {post.starScore}점
+                <StarRating totalStars={1} float="left" disabled={true}/></div>
                 {(post.writer ? post.writer.nick === auth.userNick : false) ?
-                <Link to="/post/managePost" state={{post, state}}>글수정</Link> : ""
-                }
+                <Link to="/post/managePost" state={{post, state}}>글수정</Link> : "" }
             <br/>
             <ReplyList parent={post} />
         </>;

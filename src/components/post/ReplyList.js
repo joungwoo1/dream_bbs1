@@ -7,14 +7,10 @@ import AppContext from "context/AppContextProvider";
 import { useContext, useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import { DisplayDate } from 'toolbox/DisplayDate';
-import { useLocation } from "react-router";
 
 export default function ReplyList({ parent }) {
     const { auth } = useContext(AppContext);
-    const location = useLocation();
-    const state = location.state;
     const penalty = auth?.penalty;
-
     const [justCreatedReplyList, setJustCreatedReplyList] = useState([]);
     const [openAddReply] = useState(new Map());//댓글달기 창 여는용
     const [openUpdateReply] = useState(new Map());//댓글수정 창 여는용
@@ -29,26 +25,31 @@ export default function ReplyList({ parent }) {
         setRenderCount(renderCount + 1);
     }
 
-    //댓글 컨텐츠 가져오기
-    function bringInputReplyContent(replyId) {
-        let content = "";
-        parent.listReply.map((replyId) => {
-            if (replyId.id == parent.id + auth.userId){
-                content = replyId.content;
+    //로그인한 계정 댓글 정보 가져오기
+    function findMyReply() {
+        let findReply = "";
+        parent.listReply.forEach((reply) => {
+            if (reply.writer.id == auth.userId){
+                findReply = reply;
             }
         })
-        return content;
+        return findReply;
     }
- 
+    //로그인한 계정 댓글 내용 가져오기
+    function bringInputReplyContent() {
+        return findMyReply().content
+    }
+    //로그인한 계정 댓글 별점 가져오기
+    function bringInputStarScore() {
+        return findMyReply().starScore
+    }
 
+    //새로고침 기능
+    function swicheed(){ window.location.reload(); } 
+
+    //별점 주고 받기 기능
     const bringStarScore = (num) =>{
-        let bstarScore = '';
-        parent.listReply.map((replyId) => {
-            if (replyId.id == parent.id + auth.userId){
-                bstarScore = replyId.starScore;
-            }
-        })
-        return bstarScore;
+        return findMyReply().starScore;
     }
     
     /* 별점 받는 곳 콜백함수 */
@@ -61,7 +62,6 @@ export default function ReplyList({ parent }) {
         openAddReply.set(replyId, 1); //openAddReply 댓글 추가창을 열게 설정하는 기능
         setRenderCount(renderCount + 1);//조회수 증가
     }
-    
     
     //댓글 수정창 열기
     function markShowChangeReply(e, replyId) {
@@ -98,13 +98,13 @@ export default function ReplyList({ parent }) {
             const reply = response.data;
             setJustCreatedReplyList([...justCreatedReplyList, reply]);
             replyOnReply.set(parentId, '');
+            swicheed();
             setRenderCount(renderCount + 1);
             postStarScoreAxios(parentId);
             console.log("reply success");
         } catch (err) {
-            console.log("fail");
+            console.log("fail reply");
         }
-        window.location.replace(`/post/${state.id}`);  //페이지 새로고침
     }
     
     const postStarScoreAxios = async (postId) => {
@@ -113,7 +113,6 @@ export default function ReplyList({ parent }) {
 		} catch (err) {
 			console.log('postStarScore Failed');
 		}
-        window.location.replace(`/anonymous/getPost/${postId}`);  //페이지 새로고침
 	}
 
     /* 삭제 버튼 기능 */
@@ -128,10 +127,10 @@ export default function ReplyList({ parent }) {
                     }
                 });
                 postStarScoreAxios(replyId);
+                swicheed();
         } catch (err) {
             console.log("Delete failed... ", err);
         }
-        window.location.replace(`/post/${state.id}`);  //페이지 새로고침
     }
     
 
@@ -144,6 +143,7 @@ export default function ReplyList({ parent }) {
     /*댓글 등록 체크 */
     function ReplyCheck(replyCheck=true){
         let isAlready = [];
+        console.log(isAlready)
         parent.listReply.map((replyId) => {
             isAlready.push(replyId.id == parent.id + auth.userId && replyId.length !=0);
         })
@@ -156,25 +156,27 @@ export default function ReplyList({ parent }) {
         }
     }
 
-
     // 댓글 출력 
-    function replyRender(){
+    function replyRender(){        
         return <ul> 
         {parent.listReply?.map((reply) => {
             return <li key={reply.id}>
+                <StarRating style={""} totalStars={reply.starScore} disabled={true}/> 
                 <p>작성자: <span>{reply.writer ? reply.writer.nick : ""}
-                 <span> {DisplayDate(reply.regDt, reply.uptDt)} </span> 별점 {reply.starScore}
-                <StarRating style={""} totalStars={reply.starScore} disabled={true}/> </span></p>
-                <p><span>댓글 :{reply.content} {auth.userNick ? (reply.id == parent.id + auth.userId ? ReplyCheck(false) :"")  :""}</span>  </p>
-               
-            </li>
-        })}
-    </ul>
+                 <span> 
+                    {DisplayDate(reply.regDt, reply.uptDt)} </span> 별점 {reply.starScore}
+                </span>
+                </p>
+                <p>
+                    <span>댓글 :{reply.content} {auth.userNick ? (reply.id == parent.id + auth.userId 
+                        ? ReplyCheck(false) :"")  :""}
+                    </span>
+                </p>
+                </li>
+            })}
+            </ul>
     }
 
-
-
-    
     justCreatedReplyList.forEach((newReply) => { appendJustCreatedReply(newReply, parent) });
 
     return <>
@@ -189,7 +191,7 @@ export default function ReplyList({ parent }) {
         {openUpdateReply.has(parent.id) ?
             <UpdateReply auth={auth} parent={parent} getStarScore={getStarScore} bringStarScore={bringStarScore}
             onInputReplyContent={onInputReplyContent} bringInputReplyContent={bringInputReplyContent} manageReply={manageReply}
-            handleDelete={handleDelete} /> : ""}
+            handleDelete={handleDelete} bringInputStarScore={bringInputStarScore} /> : ""}
         {replyRender()}
     </>
 }
