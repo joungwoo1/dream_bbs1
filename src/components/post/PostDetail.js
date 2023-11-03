@@ -47,21 +47,25 @@ export default function PostDetail() {
 
 
     return <>
-        <Link key={state.boardId} style={{ margin: '5px' }}
-            to={'/board'} state={state}>
-            목록
-        </Link>
+        {state.boardId ?
+            <Link key={state.boardId} style={{ margin: '5px' }}
+                to={'/board'} state={state}>
+                목록
+            </Link> : auth.userName ?
+                <Link to='/recent-movie' style={{ margin: '5px' }}>목록</Link> :
+                <Link to='/' style={{ margin: '5px' }}>메인으로</Link>}
         <Fetch uri={postUri} renderSuccess={RenderSuccess} />
     </>;
-
     
 
     function RenderSuccess(post) {
         return <>
-         {setTitle(post.title)}
-        <ThumbnailList imgDtoList={post.listAttachFile}/>
-                <h3>제목: {post.title}</h3>
-                <p>줄거리: {post.content}</p>
+            {setTitle(post.title)}
+            <br />
+            {isPaid ? <ThumbnailList imgDtoList={post.listAttachFile} /> : <th style={{ color: 'blue' }}>영화를 관람하시려면 멤버쉽 구독이 필요합니다.</th>}
+
+            <h3>제목 : {title}</h3>
+            <p>줄거리 : {post.content}</p>
                 <p>조회수: <span>{post.readCnt}회</span>
                 <span> 개봉일: {DisplayDate(post.regDt, post.uptDt)} </span></p>
                 <div>등록닉네임 : {post.writer ? post.writer.nick : ""}&nbsp;&nbsp;&nbsp;&nbsp;별점: {post.starScore}점

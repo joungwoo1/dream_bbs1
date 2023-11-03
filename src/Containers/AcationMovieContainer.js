@@ -15,9 +15,10 @@ const ActionMovieContainer = () => {
         <>
             <h3>Action Movie</h3>
             <MovieList>
-                { actionData.results && actionData.results.map(movie => ( 
+                { actionData.results && actionData.results.map(movie => (
                     <MovieListSlider 
                         key={movie.id}
+                        id={movie.id}
                         title={movie.title}
                         average={movie.vote_average}
                         overview={movie.overview} 

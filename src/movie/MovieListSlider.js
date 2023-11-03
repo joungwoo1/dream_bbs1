@@ -159,7 +159,8 @@ const MovieListLi = styled.li`
 `;
 
 
-const MovieListSlider = ({title, date, overview, average, poster, backImg}) => {
+const MovieListSlider = ({id, title, date, overview, average, poster, backImg}) => {
+    console.log(id);
     const [ detail, setDetail ] = useState(false);
     let body = document.getElementsByTagName('body')[0];
     const showDetail = () => {

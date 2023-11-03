@@ -59,7 +59,6 @@ export default function Mypage() {
                 {MembershipDate(membership) === 0 ? '내일 자정' : MembershipDate(membership) + 1 + '일 후'}에 멤버쉽 구독이 종료됩니다.<br />
                 <Button variant='danger' onClick={(e) => { updateMembership(e, '1900-01-01') }}>멤버쉽 취소 및 환불</Button>
             </>
-
         ) : (
             <>현재 멤버쉽 구독 중이 아닙니다.</>
         );
@@ -79,30 +78,36 @@ export default function Mypage() {
                 onClick={(e) => { updateMembership(e, MembershipDate(membership) < 0 ? new Date().setDate(today + 1) : membership.setDate(membershipDay + 1)) }}>
                 하루 멤버쉽{isPaid ? ' 연장' : ' 구독'}
             </Button><br /><br />
-            <Fetch uri={listRecentMoviesGenreUri} renderSuccess={findFavoriteGenre} /><br /><br />
+            <Fetch uri={listRecentMoviesGenreUri} renderSuccess={RenderSuccess} /><br /><br />
             <Button variant='dark' onClick={handleShowInactive} style={{ float: 'right', margin: '10px' }}>회원탈퇴</Button>
 
             <Modal show={showInactive} onHide={handleCloseInactive}>
-                    <Modal.Header closeButton>
-                        <Modal.Title>정말로 회원탈퇴하시겠습니까?</Modal.Title>
-                    </Modal.Header>
-                    <Modal.Body>
-                        '예'를 누르시면 즉시 회원탈퇴 절차가 진행됩니다.<br />
-                        <th style={{ color: 'red' }}>멤버쉽 취소 절차를 거치지 않을 경우 환불이 불가능하므로</th>
-                        반드시 멤버쉽 취소 후 진행해주세요.<br /><br />
-                        이후 1년 안에 같은 이메일로 재가입하지 않을 경우<br />
-                        <th style={{ color: 'red' }}>계정정보가 완전 삭제됩니다.</th><br />
-                        또한, <th style={{ color: 'red' }}>경고받은 횟수는 재가입해도 초기화되지 않습니다.</th>
-                    </Modal.Body>
-                    <Modal.Footer>
-                        <Button variant="danger" onClick={(e) => inactiveAccount(e, userId)}>
-                            예
-                        </Button>
-                        <Button variant="info" onClick={handleCloseInactive}>
-                            아니오
-                        </Button>
-                    </Modal.Footer>
-                </Modal>
+                <Modal.Header closeButton>
+                    <Modal.Title>정말로 회원탈퇴하시겠습니까?</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                    '예'를 누르시면 즉시 회원탈퇴 절차가 진행됩니다.<br />
+                    <th style={{ color: 'red' }}>멤버쉽 취소 절차를 거치지 않을 경우 환불이 불가능하므로</th>
+                    반드시 멤버쉽 취소 후 진행해주세요.<br /><br />
+                    이후 1년 안에 같은 이메일로 재가입하지 않을 경우<br />
+                    <th style={{ color: 'red' }}>계정정보가 완전 삭제됩니다.</th><br />
+                    또한, <th style={{ color: 'red' }}>경고받은 횟수는 재가입해도 초기화되지 않습니다.</th>
+                </Modal.Body>
+                <Modal.Footer>
+                    <Button variant="danger" onClick={(e) => inactiveAccount(e, userId)}>
+                        예
+                    </Button>
+                    <Button variant="info" onClick={handleCloseInactive}>
+                        아니오
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         </>
     );
+
+    function RenderSuccess(favor) {
+        const favorList = findFavoriteGenre(favor);
+        return favorList.length === 0 ? "영화를 시청할수록 당신의 정확한 취향을 확인하실 수 있습니다." :
+            "당신의 취향 장르는 " + favorList + "입니다.";
+    }
 }

@@ -19,6 +19,7 @@ const RomanceMovieContainer = () => {
                 { romanceData.results && romanceData.results.map(movie => ( 
                     <MovieListSlider 
                         key={movie.id}
+                        id={movie.id}
                         title={movie.title} 
                         average={movie.vote_average} 
                         overview={movie.overview} 

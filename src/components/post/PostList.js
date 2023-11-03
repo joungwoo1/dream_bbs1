@@ -13,7 +13,6 @@ export default function PostList() {
     const isManager = auth?.roles?.includes('manager');
 
     function buildUrl(step) {
-        console.log("buildUrl(step", step);
         if (state.search)
             return `http://localhost:8080/post/anonymous/search/${state.boardId}/${state.search}/${state.page}`;
         else
@@ -25,10 +24,8 @@ export default function PostList() {
     console.log("saved targetBoard", targetBoard);
 
     if (targetBoard !== state.boardId) {
-        console.log("targetBoard chaging", state.boardId);
         setTargetBoard(state.boardId);
         setPostListUri(buildUrl());
-        console.log("다시 그리기 시작해");
     }
 
     function goTo(choosenPage) {
@@ -40,6 +37,7 @@ export default function PostList() {
 
     const txtSearch = useRef();
 
+    /**
     const onSearch = (e) => {
         e.preventDefault();
         let search = txtSearch.current.value;
@@ -49,7 +47,7 @@ export default function PostList() {
         state.page = 1;
 
         setPostListUri(buildUrl());
-    }
+    } */
 
     const displayPagination = (paging) => {
         const pagingBar = [];
@@ -99,16 +97,17 @@ export default function PostList() {
 
     return (
         <div>
-           <input placeholder='검색어를 넣으세요' ref={txtSearch}></input>
-            <button key={"btnSearch"} onClick={onSearch}>검색</button>
-
+            {
+           //<input placeholder='검색어를 넣으세요' ref={txtSearch}></input>
+           // <button key={"btnSearch"} onClick={onSearch}>검색</button>
+            }
             {isManager ?
                 <Link
                     to="/post/managePost"
-                    state={{ post: { boardVO: { id: state.boardId }, listAttachFile:[] } }}>
+                    state={{ post: { boardVO: { id: state.boardId }, listAttachFile:[] } }} 
+                    style={{ margin: '5px' }}>
                     영상 등록
-                </Link> : null
-            }
+                </Link> : ''}
             
             <Fetch uri={postListUri} renderSuccess={renderSuccess} />
         </div>

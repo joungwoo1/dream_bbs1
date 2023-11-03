@@ -19,6 +19,7 @@ const AnimationMovieContainer = () => {
                 { animationData.results && animationData.results.map(movie => ( 
                     <MovieListSlider 
                         key={movie.id}
+                        id={movie.id}
                         title={movie.title} 
                         average={movie.vote_average} 
                         overview={movie.overview} 

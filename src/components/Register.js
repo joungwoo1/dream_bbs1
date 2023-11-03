@@ -207,15 +207,15 @@ const Register = () => {
             </Form.Group>
             <Form.Group className="mb-3">
                 <Form.Label htmlFor="userEmail">이메일:&nbsp;</Form.Label>
-                <input class="box"
+                <input className="box"
                     type="text"
                     id="userEmail"
                     onChange={(e) => setUserEmail(e.target.value)}
                     required
                 />
                 @
-                <input class="box" id="domain-txt" type="text" onChange={(e) => setUserDomain(e.target.value)} required />
-                <select class="box" id="domain-list" onChange={(e) => changeDomain(e.target.value)}>
+                <input className="box" id="domain-txt" type="text" onChange={(e) => setUserDomain(e.target.value)} required />
+                <select className="box" id="domain-list" onChange={(e) => changeDomain(e.target.value)}>
                     <option value="type">직접 입력</option>
                     <option value="naver.com">naver.com</option>
                     <option value="google.com">google.com</option>

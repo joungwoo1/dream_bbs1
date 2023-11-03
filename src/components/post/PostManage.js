@@ -20,13 +20,14 @@ export default function PostManage() {
     const [title, setTitle] = useState(post.title);
     const [content, setContent] = useState(post.content);
     const [listAttach, setListAttach] = useState(post.listAttachFile);
-	const [contentGenre, setContentGenre] = useState(post.genre);
+	const [movieId, setMovieId] = useState(post.movieDTO?.id);
+    const [contentGenre, setContentGenre] = useState(post.genre);
 	const [ageLimit, setAgeLimit] = useState(post.ageLimit);
 
     const [hasAllContents, setHasAllContents] = useState();
     useEffect(() => {
-        setHasAllContents(title?.trim() && content?.trim() && contentGenre?.trim() && ageLimit?.trim() ? true : false);
-    }, [title, content, contentGenre, ageLimit ])
+        setHasAllContents(title?.trim() ? content?.trim() ? movieId ? contentGenre?.trim() ? ageLimit : false : false : false : false);
+    }, [title, content, movieId, contentGenre, ageLimit])
 
 
 
@@ -53,7 +54,7 @@ export default function PostManage() {
 			content: content.trim(), boardVO: { id: post.boardVO.id },
 			genre: contentGenre, ageLimit: ageLimit, listAttachFile: listAttach
 		};
-		console.log(JSON.stringify(bodyData))
+
         try {
             await axios.post(
                 "/post/managePost",
@@ -68,11 +69,10 @@ export default function PostManage() {
 			console.log('post.id', post.id);
             if (!post.id) {
                 // 글쓰기
-				console.log('//글쓰기 ttt');
-				navigate(`/board`, { state: { boardId: post.boardVO.id, page: 1, search: "" } });
+                const ttt = { boardId: post.boardVO.id, page: 1, search: "" }
+                navigate(`/board`, { state: ttt });
 			} else {
                 // 수정
-                console.log('수정', post);
                 navigate(`/board`, { state: state });
             }
 
@@ -143,6 +143,16 @@ export default function PostManage() {
                 value={title}
                 id="title"
                 onChange={(e) => setTitle(e.target.value)}
+                required
+            />
+        </Form.Group>
+        <Form.Group className="mb-3" >
+            <Form.Label >영화ID</Form.Label>
+            <Form.Control
+                type="text"
+                value={movieId}
+                id="movieId"
+                onChange={(e) => setMovieId(e.target.value)}
                 required
             />
         </Form.Group>

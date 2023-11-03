@@ -20,7 +20,7 @@ export const getActionData = (data) => {
 };
 
 export const getAction = () => dispatch => {
-    return axios.get(`${API_URL}/discover/movie?api_key=${API_KEY}&with_genres=28`)
+    return axios.get(`${API_URL}/discover/movie?api_key=${API_KEY}&language=ko&with_genres=28`)
     .then(response => {
         dispatch(getActionData(response.data))
     })
@@ -39,7 +39,7 @@ export const getComedyData = (data) => {
 };
 
 export const getComedy = () => dispatch => {
-    return axios.get(`${API_URL}/discover/movie?api_key=${API_KEY}&with_genres=35`)
+    return axios.get(`${API_URL}/discover/movie?api_key=${API_KEY}&language=ko&with_genres=35`)
     .then(response => {
         dispatch(getComedyData(response.data))
     })
@@ -57,7 +57,7 @@ export const getRomanceData = (data) => {
 };
 
 export const getRomance = () => dispatch => {
-    return axios.get(`${API_URL}/discover/movie?api_key=${API_KEY}&with_genres=10749`)
+    return axios.get(`${API_URL}/discover/movie?api_key=${API_KEY}&language=ko&with_genres=10749`)
     .then(response => {
         dispatch(getRomanceData(response.data))
     })
@@ -75,7 +75,7 @@ export const getAnimationData = (data) => {
 };
 
 export const getAnimation = () => dispatch => {
-    return axios.get(`${API_URL}/discover/movie?api_key=${API_KEY}&with_genres=16`)
+    return axios.get(`${API_URL}/discover/movie?api_key=${API_KEY}&language=ko&with_genres=16`)
     .then(response => {
         dispatch(getAnimationData(response.data))
     })
@@ -93,7 +93,7 @@ export const getHorrorData = (data) => {
 };
 
 export const getHorror = () => dispatch => {
-    return axios.get(`${API_URL}/discover/movie?api_key=${API_KEY}&with_genres=27`)
+    return axios.get(`${API_URL}/discover/movie?api_key=${API_KEY}&language=ko&with_genres=27`)
     .then(response => {
         dispatch(getHorrorData(response.data))
     })

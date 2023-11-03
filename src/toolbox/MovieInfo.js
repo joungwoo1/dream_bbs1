@@ -1,4 +1,5 @@
-export const listGenre = ['액션/무협', '모험', '판타지', '공상', '과학(SF)', '누아르', '전쟁', '코미디'];
+// 현재 임시로 사용중. 변경 가능성 있음.
+export const listGenre = ['액션·무협', '모험', '판타지', '공상', '과학(SF)', '누아르', '전쟁', '코미디']; // 쉼표(,)나 슬래시(/)는 사용하지 말아주세요
 
 export const listAgeLimit = [ // limit(제한 연령)가 작은 순서대로 넣어주세요
     { name: '전체', limit: 0 },
@@ -21,7 +22,7 @@ export const findAgeLimit = (userAge, index) => {
 
 export const findFavoriteGenre = (favor) => {
     if (favor.length === 0) {
-        return "영화를 시청하면 당신의 취향을 확인하실 수 있습니다."
+        return [];
     } else {
         let genreCount = [0];
         genreCount.length = listGenre.length;
@@ -42,6 +43,6 @@ export const findFavoriteGenre = (favor) => {
                 most.push(listGenre[i]);
             }
         }
-        return "당신의 취향 장르는 " + most + "입니다.";
+        return most;
     }
 }
