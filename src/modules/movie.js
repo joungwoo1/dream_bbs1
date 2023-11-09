@@ -8,8 +8,8 @@ export const GET_ANIMATION = 'movie/GET_ANIMATION';
 export const GET_HORROR = 'movie/GET_HORROR';
 
 // Api information
-const API_KEY = '2a98cbe1fa65b5daaabc0522192e19f3';
-const API_URL = `https://api.themoviedb.org/3`;
+export const API_KEY = '2a98cbe1fa65b5daaabc0522192e19f3';
+export const API_URL = `https://api.themoviedb.org/3`;
 
 // Action
 export const getActionData = (data) => {

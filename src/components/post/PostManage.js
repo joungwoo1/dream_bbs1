@@ -26,10 +26,19 @@ export default function PostManage() {
 
     const [hasAllContents, setHasAllContents] = useState();
     useEffect(() => {
-        setHasAllContents(title?.trim() ? content?.trim() ? movieId ? contentGenre?.trim() ? ageLimit : false : false : false : false);
+        setHasAllContents(title?.trim() ? content?.trim() ? movieId?contentGenre?.trim() ? ageLimit : false : false : false : false);
     }, [title, content, movieId, contentGenre, ageLimit])
-
-
+    
+    const [listGenre, setListGenre] = useState([]);
+    useEffect(() => {
+        const promise = genreData();
+        const getData = () => {
+          promise.then((genre) => {
+            setListGenre(genre);
+          });
+        };
+        getData();
+      }, []);
 
 	function checkGenre(e) {
 		let files = '';

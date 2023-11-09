@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { Link } from 'react-router-dom';
 
 const MovieDetailBlock = styled.div`
     position: fixed;
@@ -50,6 +51,38 @@ const MovieDetailBlock = styled.div`
                 overflow: hidden;
             }
         }
+
+        .movie_detail_icon {
+            position: relative;
+            display: flex;
+            .icon_play {
+                background-color: rgb(252, 66, 106);
+                color: rgb(255, 255, 255);
+                padding: 10px 20px 10px 50px;
+                border-radius: 4px;
+                cursor: pointer;
+                transition: all 0.1s ease-in;
+                span {
+                    font-size: 18px;
+                }
+                &:before {
+                    content:''; 
+                    height:0; 
+                    width:0; 
+                    display:block; 
+                    border:7px transparent solid; 
+                    border-right-width:0; 
+                    border-left-color:rgb(255, 255, 255);; 
+                    position:absolute; 
+                    top:50%; 
+                    left:30px;
+                    transform:translate(-50%, -50%);
+                }
+                &:hover {
+                    transform: scale(1.1);
+                }
+            }
+        }
     
     }
     .detail_right {
@@ -59,7 +92,7 @@ const MovieDetailBlock = styled.div`
     }
 `;
  
-const MovieDetail = ({clazzName, show, onClick, title, overview, backImg}) => {
+export const MovieDetail = ({id, clazzName, show, onClick, title, overview, backImg}) => {
     const styles ={
         backgroundImage: `url(https://image.tmdb.org/t/p/original${backImg})`,
         backgroundSize: 'cover',
@@ -78,7 +111,11 @@ const MovieDetail = ({clazzName, show, onClick, title, overview, backImg}) => {
                         <div className="content_wrap movie_detail_info">
                             <p>{overview}</p>
                         </div>
-
+                        <div className="left_wrap movie_detail_icon">
+                            <Link to="/movie_play" state={{id:id}} className="icon_play">
+                                <span>재생</span>
+                            </Link>
+                        </div>
                     </div>
                 </div>
             </MovieDetailBlock>

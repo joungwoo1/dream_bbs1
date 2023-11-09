@@ -8,16 +8,15 @@ import { useContext, useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import { DisplayDate } from 'toolbox/DisplayDate';
 
-export default function ReplyList({ parent }) {
+export default function ReplyListSujung({ parent }) {
     const { auth } = useContext(AppContext);
     const penalty = auth?.penalty;
     const [justCreatedReplyList, setJustCreatedReplyList] = useState([]);
     const [openAddReply] = useState(new Map());//댓글달기 창 여는용
     const [openUpdateReply] = useState(new Map());//댓글수정 창 여는용
-    const [replyOnReply] = useState(new Map());//댓글 내용
+    const [replyOnReply] = useState(new Map());//댓글 내용 저장
     let [starScore, setStarScore] = useState(5);//댓글별점
     const [renderCount, setRenderCount] = useState(0);//조회수
-    const myReply = parent.myReply;
 
     //input 컨텐츠 값 받는 역할
     function onInputReplyContent(e, replyId) {
@@ -26,21 +25,12 @@ export default function ReplyList({ parent }) {
         setRenderCount(renderCount + 1);
     }
 
-    //로그인한 계정 댓글 내용 가져오기
-    function bringInputReplyContent() {
-        return myReply.content
-    }
-    //로그인한 계정 댓글 별점 가져오기
-    function bringInputStarScore() {
-        return myReply.starScore
-    }
-
     //새로고침 기능
     function swicheed(){ window.location.reload(); } 
 
     //별점 주고 받기 기능
     const bringStarScore = (num) =>{
-        return myReply.starScore;
+        return findMyReply().starScore;
     }
     
     /* 별점 받는 곳 콜백함수 */
@@ -124,7 +114,7 @@ export default function ReplyList({ parent }) {
         }
     }
     
-    console.log(parent)
+
 
     function appendJustCreatedReply(newReply, parent) {
         if (!parent.listReply.includes(newReply))
@@ -134,48 +124,30 @@ export default function ReplyList({ parent }) {
     /*댓글 등록 체크 */
     function ReplyCheck(replyCheck=true){
         if(replyCheck == true){
-            return <Button variant='primary' onClick={(e) => { markShowAddReply(e, parent.id)}}>댓글</Button>
+            return isAlready.includes(true)  ?
+            "" : <Button variant='primary' onClick={(e) => { markShowAddReply(e, parent.id) }}>댓글</Button>
         } else {
-            return <Button variant='primary' onClick={(e) => { markShowChangeReply(e, parent.id)}}>수정</Button>
+            return isAlready.includes(true)  ?
+            <Button variant='primary' onClick={(e) => { markShowChangeReply(e, parent.id) }}>수정</Button> : ""
         }
-    }
-    //내 댓글 출력
-    function myReplyPrint(){
-        if (myReply == null){
-            return "";
-        } else {
-            return <li key={myReply.id}>
-                <StarRating style={""} totalStars={myReply.starScore} disabled={true}/> 
-                <p>작성자: <span>{myReply.writer ? myReply.writer.nick : ""}&nbsp;&nbsp;&nbsp;&nbsp;
-                 <span> 
-                    {DisplayDate(myReply.regDt, myReply.uptDt)} </span>
-                </span>
-                </p>
-                <p>
-                    <span>댓글 :{myReply.content} { myReply != null ? ReplyCheck(false) : ReplyCheck(true) }
-                    </span>
-                </p> 
-                </li>
-        }
-
     }
 
     // 댓글 출력 
     function replyRender(){        
         return <ul> 
-          {myReplyPrint()}
         {parent.listReply?.map((reply) => {
             return <li key={reply.id}>
                 <StarRating style={""} totalStars={reply.starScore} disabled={true}/> 
-                <p>작성자: <span>{reply.writer ? reply.writer.nick : ""}&nbsp;&nbsp;&nbsp;&nbsp;
+                <p>작성자: <span>{reply.writer ? reply.writer.nick : ""}
                  <span> 
-                    {DisplayDate(reply.regDt, reply.uptDt)} </span>
+                    {DisplayDate(reply.regDt, reply.uptDt)} </span> 별점 {reply.starScore}
                 </span>
                 </p>
                 <p>
-                    <span>댓글 :{reply.content}
+                    <span>댓글 :{reply.content} {auth.userNick ? (reply.id == parent.id + auth.userId 
+                        ? <Button variant='primary' onClick={(e) => { markShowChangeReply(e, reply.id) }}>수정</Button>:"")  :""}
                     </span>
-                </p> 
+                </p>
                 </li>
             })}
             </ul>
@@ -186,7 +158,7 @@ export default function ReplyList({ parent }) {
     return <>
         {/* 초회 댓글인지 확인 */}
         {auth.userNick ? penalty >= 5 ? <th style={{ color: 'red' }}>
-            지나친 경고 누적으로 인해 댓글 작성 권한이 박탈된 상태입니다.</th>:"" :""}
+            지나친 경고 누적으로 인해 댓글 작성 권한이 박탈된 상태입니다.</th>:ReplyCheck(): ""}
         
         {/* 로그인 했는지 체크 여부로 댓글창 띄우기 */}
         {openAddReply.has(parent.id) ?

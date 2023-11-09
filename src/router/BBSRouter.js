@@ -8,6 +8,11 @@ import Mypage from 'components/Mypage';
 import { Route, Routes } from 'react-router-dom';
 import RecentMovie from 'components/RecentMovie';
 import MainPage from 'page/MainPage';
+import MoviePlay from 'movie/MoviePlay';
+import PostSearch from 'components/PostSearch';
+import ReplyList from 'components/post/ReplyList';
+
+
 
 export default function BBSRouter() {
     return (
@@ -15,12 +20,13 @@ export default function BBSRouter() {
 
             <Route path="/" element={<HomePage />} exact={true} />
             <Route path="/main" element={<MainPage />} exact={true} />
-
+            <Route path='/movie_play' element={<MoviePlay/>} />
             <Route path="/sign-up" element={<Register />} />
             <Route path='/board' element={<PostList />} />
             <Route path='/post' element={<PostDetail />} />
             <Route path='/post/managePost' element={<PostManage />} />
-            <Route path='/sign-up' element={<Register />} />
+            <Route path='/post/manageReply' element={<ReplyList />} />
+            <Route path='/movie-search' element={<PostSearch />} />
             <Route path='/manager-only' element={<ManagerPage />} />
             <Route path='/mypage' element={<Mypage />} />
             <Route path='/recent-movie' element={<RecentMovie />} />

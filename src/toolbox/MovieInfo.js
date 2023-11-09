@@ -1,5 +1,27 @@
-// 현재 임시로 사용중. 변경 가능성 있음.
-export const listGenre = ['액션·무협', '모험', '판타지', '공상', '과학(SF)', '누아르', '전쟁', '코미디']; // 쉼표(,)나 슬래시(/)는 사용하지 말아주세요
+import axios from "api/axios";
+
+export async function genreData() { // db에서 장르 종류 받아오기. 
+    let listGenreName = [];
+    const res = await axios.get('/movie/anonymous/listGenre');
+    const genreList = res.data;
+    for (let i = 0; i < genreList.length; i++) {
+        listGenreName = [...listGenreName, genreList[i].name];
+    }
+    return listGenreName;
+}
+
+/*  genreData를 export할 경우 이 부분을 그곳에 추가할 것. (여기서는 사용불가. 이유는 아직 파악 안됨. 이 이상의 해결책이 있을경우 수정바람.)
+    const [listGenre, setListGenre] = useState([]);
+    useEffect(() => {
+        const promise = genreData();
+        const getListData = () => {
+          promise.then((genre) => {
+            setListOfGenre(genre);
+          });
+        };
+        getListData();
+      }, []);
+*/
 
 export const listAgeLimit = [ // limit(제한 연령)가 작은 순서대로 넣어주세요
     { name: '전체', limit: 0 },
@@ -20,9 +42,11 @@ export const findAgeLimit = (userAge, index) => {
     }
 }
 
-export const findFavoriteGenre = (favor) => {
+export const findFavoriteGenre = (listGenre, favor) => {
+    let most = []; // 가장 많이 본 장르(여러개 존재할 경우 전부 집어넣습니다)
+
     if (favor.length === 0) {
-        return [];
+        return most;
     } else {
         let genreCount = [0];
         genreCount.length = listGenre.length;
@@ -33,7 +57,6 @@ export const findFavoriteGenre = (favor) => {
             ));
         }
         let biggest = 0;
-        let most = []; // 가장 많이 본 장르(여러개 존재할 경우 전부 집어넣습니다)
         for (let i = 0; i < listGenre.length; i++) {
             if (genreCount[i] > biggest) {
                 most = [listGenre[i]];

@@ -3,12 +3,23 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { Form } from "react-bootstrap";
 import { Link } from "react-router-dom";
 import { Fetch } from "toolbox/Fetch";
-import { findFavoriteGenre, listAgeLimit, listGenre } from "toolbox/MovieInfo";
+import { findFavoriteGenre, genreData, listAgeLimit } from "toolbox/MovieInfo";
 
-export default function MovieSearch() {
+export default function PostSearch() {
     const [search, setSearch] = useState({});
 
     const { auth } = useContext(AppContext);
+
+    const [listGenre, setListGenre] = useState([]);
+    useEffect(() => {
+        const promise = genreData();
+        const getData = () => {
+          promise.then((genre) => {
+            setListGenre(genre);
+          });
+        };
+        getData();
+      }, []);
 
     const listRecentMoviesGenreUri = `http://localhost:8080/user/anonymous/listRecentMoviesGenre?userId=${auth.userId}`;
     const [chosenGenre, setChosenGenre] = useState([]);
@@ -27,7 +38,7 @@ export default function MovieSearch() {
         if (search.genreList && search.genreList.length !== 0) {
             genreList = search.genreList;
         } else {
-            genreList = [...listGenre];
+            genreList = listGenre;
         }
         if (search.ageLimitList && search.ageLimitList.length !== 0) {
             ageLimitList = search.ageLimitList;
@@ -88,7 +99,7 @@ export default function MovieSearch() {
     }
 
     function FavoriteGenre(favor) {
-        favorList = findFavoriteGenre(favor);
+        favorList = findFavoriteGenre(listGenre, favor);
         return favorList.length === 0 ? "비회원 혹은 영화를 시청한 적 없는 회원이 추천장르를 선택할 경우, 모든 장르를 검색하게 됩니다." :
             "현재 추천장르는 " + favorList + "입니다.";
     }

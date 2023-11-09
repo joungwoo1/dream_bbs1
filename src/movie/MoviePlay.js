@@ -1,5 +1,10 @@
 import styled from 'styled-components';
-import logoImg from '../Image/logo.png';
+
+import { API_KEY, API_URL } from 'modules/movie';
+
+import { useLocation } from 'react-router-dom';
+
+
 
 const MovieTemplate = styled.div`
     position: relative;
@@ -23,12 +28,23 @@ const MovieTemplate = styled.div`
         text-align: center;
         z-index: 100;
     }
-    .logo {
-        display: inline-block;
-        width: 345px;
-        height: 125px;
-        background: url(${logoImg}) no-repeat ;
-        text-indent: -9999px;
+
+    .trailer {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+              &:before {
+                content: url(}); 
+                height: 394px;
+                width: 702px;
+                display: flex; 
+                justify-content: center;
+                border:10px transparent solid; 
+                border-width: thick;
+                border-color:#c92a2a; 
+                top: 75%; 
+                left: 75%;
+        }
     }
     h1 {
         font-size: 30px;
@@ -37,13 +53,16 @@ const MovieTemplate = styled.div`
 `;
 
 const MoviePlay = () => {
+    
+  const location = useLocation();
+  const state = location.state;
+
     return(
         <MovieTemplate>
             <div className="inner">
                 <div className="area_text">
-                    <div className="logo">로고</div>
+                    <embed src={`${API_URL}/movie/${state.id}/videos?api_key=${API_KEY}`} width={"702px"} height={"394px"}/>
                     <br/>
-                    <h1>서비스를 준비하고 있습니다.</h1>
                 </div>
             </div>
         </MovieTemplate>            

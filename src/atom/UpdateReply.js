@@ -29,9 +29,10 @@ export default function UpdateReply({auth, parent, getStarScore, onInputReplyCon
     return (
         <Container>
         <Row>
-            <Col>{auth.userNick}
+        <StarRating style={""} getStarsValue={getStarsValue} disabled={false} startStar={bringInputStarScore}/>
+            <Col>작성자: {auth.userNick}
         {/*별 그리기 및 별점 받아오기 */}
-        <StarRating style={""} getStarsValue={getStarsValue} disabled={false} startStar={bringInputStarScore}/></Col>
+        </Col>
         </Row>
         {/*이벤트 써서 갱신 */}
         {document.addEventListener('click',sandStarsScore(starsValue))}

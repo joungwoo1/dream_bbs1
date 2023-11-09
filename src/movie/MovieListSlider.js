@@ -160,7 +160,6 @@ const MovieListLi = styled.li`
 
 
 const MovieListSlider = ({id, title, date, overview, average, poster, backImg}) => {
-    console.log(id);
     const [ detail, setDetail ] = useState(false);
     let body = document.getElementsByTagName('body')[0];
     const showDetail = () => {
@@ -201,6 +200,7 @@ const MovieListSlider = ({id, title, date, overview, average, poster, backImg}) 
                     </div>
                 </MovieListLi>
                 <MovieDetail
+                    id={id}
                     clazzName={"movieContainer " + (detail ? "show" : "hide")}
                     show={detail}
                     title={title}

@@ -29,7 +29,6 @@ const HeaderTitle = styled.p`
     font-weight: bold;
 `;
 
-console.log("01");
 function BBSNav() {
     const boardListUri = `http://localhost:8080/bb/anonymous/listAll`;
     const { auth } = useContext(AppContext);

@@ -1,10 +1,10 @@
 import axios from 'api/axios';
 import AppContext from 'context/AppContextProvider';
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { Button, Modal } from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { MembershipDate } from 'toolbox/DisplayDate';
-import { findFavoriteGenre, listAgeLimit } from 'toolbox/MovieInfo';
+import { findFavoriteGenre, genreData, listAgeLimit } from 'toolbox/MovieInfo';
 import { Fetch } from "toolbox/Fetch";
 
 export default function Mypage() {
@@ -29,6 +29,17 @@ export default function Mypage() {
     const [showInactive, setShowInactive] = useState(false);
     const handleCloseInactive = () => setShowInactive(false);
     const handleShowInactive = () => setShowInactive(true);
+
+    const [listGenre, setListGenre] = useState([]);
+    useEffect(() => {
+        const promise = genreData();
+        const getData = () => {
+          promise.then((genre) => {
+            setListGenre(genre);
+          });
+        };
+        getData();
+      }, []);
 
     const updateMembership = async (e, date) => {
         e.preventDefault();
@@ -106,7 +117,7 @@ export default function Mypage() {
     );
 
     function RenderSuccess(favor) {
-        const favorList = findFavoriteGenre(favor);
+        const favorList = findFavoriteGenre(listGenre, favor);
         return favorList.length === 0 ? "영화를 시청할수록 당신의 정확한 취향을 확인하실 수 있습니다." :
             "당신의 취향 장르는 " + favorList + "입니다.";
     }

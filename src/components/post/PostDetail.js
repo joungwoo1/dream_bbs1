@@ -8,6 +8,7 @@ import ThumbnailList from 'atom/ThumbnailList';
 import StarRating from 'StarDraw/StarRating';
 import { useInterval } from 'hooks/useInterval';
 import axios from 'api/axios';
+import MovieDetailList from './MovieDetailList';
 
 export default function PostDetail() {
     const location = useLocation();
@@ -17,14 +18,13 @@ export default function PostDetail() {
     // state={{ id: post.id, boardId: state.boardId, page: curPage, search: textSearch.current?.value, postListWithPaging }}>
 
     const [title, setTitle] = useState()
-
-    const postUri = `http://localhost:8080/post/anonymous/getPost/${state.id}`;
-
     const userId = auth.userId;
     const postId = state.id;
+    const postUri = `http://localhost:8080/post/anonymous/getPost/${postId}/${userId}`;
+
     const interval = 5000; // 5초마다 함수 실행
     const isPaid = MembershipDate(auth.membership) >= 0;
-
+    
     
 
     useInterval(async () => {
@@ -56,10 +56,11 @@ export default function PostDetail() {
                 <Link to='/' style={{ margin: '5px' }}>메인으로</Link>}
         <Fetch uri={postUri} renderSuccess={RenderSuccess} />
     </>;
-    
 
     function RenderSuccess(post) {
         return <>
+           {MovieDetailList(post.movieDTO?.id)}
+           {console.log()}
             {setTitle(post.title)}
             <br />
             {isPaid ? <ThumbnailList imgDtoList={post.listAttachFile} /> : <th style={{ color: 'blue' }}>영화를 관람하시려면 멤버쉽 구독이 필요합니다.</th>}
@@ -73,6 +74,7 @@ export default function PostDetail() {
                 {(post.writer ? post.writer.nick === auth.userNick : false) ?
                 <Link to="/post/managePost" state={{post, state}}>글수정</Link> : "" }
             <br/>
+            
             <ReplyList parent={post} />
         </>;
     }
