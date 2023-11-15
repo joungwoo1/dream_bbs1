@@ -2,7 +2,7 @@ import axios from "api/axios";
 
 export async function genreData() { // db에서 장르 종류 받아오기. 
     let listGenreName = [];
-    const res = await axios.get('/movie/anonymous/listGenre');
+    const res = await axios.get('/movie/anonymous/listGenreInfo');
     const genreList = res.data;
     for (let i = 0; i < genreList.length; i++) {
         listGenreName = [...listGenreName, genreList[i].name];

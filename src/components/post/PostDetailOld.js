@@ -4,7 +4,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { DisplayDate } from 'toolbox/DisplayDate';
 import Fetch from 'toolbox/Fetch';
 import Button from 'react-bootstrap/Button';
-import NewReply from "atom/MngReply";
+import NewReply from "atom/CreateReply";
 
 import AppContext from 'context/AppContextProvider';
 

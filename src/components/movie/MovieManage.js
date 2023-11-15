@@ -8,7 +8,7 @@ import AttachedFileList from "atom/AttachedFileList";
 import ThumbnailList from "atom/ThumbnailList";
 import { listAgeLimit, genreData } from "toolbox/MovieInfo";
 
-export default function PostManage() {
+export default function MovieManage() {
     const location = useLocation();
     // 신규작성 시 post.boardVO.id 활용, 수정 시 모든 정보 활용
     const state = location.state?.state;

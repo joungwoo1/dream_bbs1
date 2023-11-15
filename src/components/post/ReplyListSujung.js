@@ -1,7 +1,7 @@
 import StarRating from "StarDraw/StarRating";
 import axios from "api/axios";
 import ReactDOM from 'react-dom';
-import MngReply from "atom/MngReply";
+import MngReply from "atom/CreateReply";
 import UpdateReply from "atom/UpdateReply";
 import AppContext from "context/AppContextProvider";
 import { useContext, useEffect, useState } from 'react';

@@ -12,14 +12,10 @@ export default function PostList() {
     const { auth } = useContext(AppContext);
     const isManager = auth?.roles?.includes('manager');
 
-    function buildUrl(step) {
-        if (state.search)
-            return `http://localhost:8080/post/anonymous/search/${state.boardId}/${state.search}/${state.page}`;
-        else
+    function buildUrl() {
             return `http://localhost:8080/post/anonymous/listAll/${state.boardId}/${state.page}`;
     }
     const [postListUri, setPostListUri] = useState(buildUrl(222));
-    
     const [targetBoard, setTargetBoard] = useState(state.boardId);
     console.log("saved targetBoard", targetBoard);
 
@@ -34,21 +30,8 @@ export default function PostList() {
 
         setPostListUri(buildUrl());
     }
-
+    
     const txtSearch = useRef();
-
-    /**
-    const onSearch = (e) => {
-        e.preventDefault();
-        let search = txtSearch.current.value;
-
-        state.postListWithPaging = null;
-        state.search = search;
-        state.page = 1;
-
-        setPostListUri(buildUrl());
-    } */
-
     const displayPagination = (paging) => {
         const pagingBar = [];
         if (paging.prev)

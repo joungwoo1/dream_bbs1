@@ -11,7 +11,17 @@ import MainPage from 'page/MainPage';
 import MoviePlay from 'movie/MoviePlay';
 import PostSearch from 'components/PostSearch';
 import ReplyList from 'components/post/ReplyList';
+import MovieDetail from 'components/movie/MovieDetail';
+import MovieList from 'components/movie/MovieList';
+import MyEval from 'components/movie/MyEval';
+import MovieManage from 'components/movie/MovieManage';
 
+/* 
+            <Route path='/board0001' element={<PostList />} />
+            <Route path='/post' element={<PostDetail />} />
+            <Route path='/post/managePost' element={<PostManage />} />
+            <Route path='/post/manageReply' element={<ReplyList />} />
+*/
 
 
 export default function BBSRouter() {
@@ -22,9 +32,13 @@ export default function BBSRouter() {
             <Route path="/main" element={<MainPage />} exact={true} />
             <Route path='/movie_play' element={<MoviePlay/>} />
             <Route path="/sign-up" element={<Register />} />
-            <Route path='/board' element={<PostList />} />
+            <Route path='/movie' element={<MovieDetail/>}/>
             <Route path='/post' element={<PostDetail />} />
+            <Route path='/board0000' element={<MovieList/>} />
+            <Route path='/board0001' element={<PostList />} />
+            <Route path='/Movie/manageMovie' element={<MovieManage />} />
             <Route path='/post/managePost' element={<PostManage />} />
+            <Route path='/movie/manageEval' element={<MyEval/>} />
             <Route path='/post/manageReply' element={<ReplyList />} />
             <Route path='/movie-search' element={<PostSearch />} />
             <Route path='/manager-only' element={<ManagerPage />} />

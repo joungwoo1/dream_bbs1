@@ -1,6 +1,6 @@
 import { Fetch } from 'toolbox/Fetch';
 
-export default function MovieDetailList(id) {
+export default function PostShowMovieDetail(id) {
 
     const movieUri = `http://localhost:8080/movie/getMovie/${id}`;
 

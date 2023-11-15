@@ -1,10 +1,9 @@
 import StarRating from "StarDraw/StarRating";
 import axios from "api/axios";
-import ReactDOM from 'react-dom';
-import MngReply from "atom/MngReply";
+import CreateReply from "atom/CreateReply";
 import UpdateReply from "atom/UpdateReply";
 import AppContext from "context/AppContextProvider";
-import { useContext, useEffect, useState } from 'react';
+import { useContext, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import { DisplayDate } from 'toolbox/DisplayDate';
 
@@ -15,10 +14,12 @@ export default function ReplyList({ parent }) {
     const [openAddReply] = useState(new Map());//댓글달기 창 여는용
     const [openUpdateReply] = useState(new Map());//댓글수정 창 여는용
     const [replyOnReply] = useState(new Map());//댓글 내용
-    let [starScore, setStarScore] = useState(5);//댓글별점
-    const [renderCount, setRenderCount] = useState(0);//조회수
     const myReply = parent.myReply;
+    const [starScore, setStarScore] = useState(myReply === null ? 5: myReply.starScore);//댓글별점
+    const [renderCount, setRenderCount] = useState(0);//조회수
+    const [changeSwich, setChangeSwich] = useState(true);
 
+    console.log(myReply)
     //input 컨텐츠 값 받는 역할
     function onInputReplyContent(e, replyId) {
         const content = e.target.value;
@@ -26,27 +27,9 @@ export default function ReplyList({ parent }) {
         setRenderCount(renderCount + 1);
     }
 
-    //로그인한 계정 댓글 내용 가져오기
-    function bringInputReplyContent() {
-        return myReply.content
-    }
-    //로그인한 계정 댓글 별점 가져오기
-    function bringInputStarScore() {
-        return myReply.starScore
-    }
-
     //새로고침 기능
     function swicheed(){ window.location.reload(); } 
 
-    //별점 주고 받기 기능
-    const bringStarScore = (num) =>{
-        return myReply.starScore;
-    }
-    
-    /* 별점 받는 곳 콜백함수 */
-    const getStarScore = (num) =>{
-    	setStarScore(num);
-    }
 
     //set 은 데이터를 순서 없이 저장하는 기능
     function markShowAddReply(e, replyId) {
@@ -57,7 +40,7 @@ export default function ReplyList({ parent }) {
     //댓글 수정창 열기
     function markShowChangeReply(e, replyId) {
         openUpdateReply.set(replyId, 1);
-        bringStarScore(replyId);
+        setChangeSwich(!changeSwich)
         setRenderCount(renderCount + 1);//조회수 증가
     }
 
@@ -90,6 +73,7 @@ export default function ReplyList({ parent }) {
             setJustCreatedReplyList([...justCreatedReplyList, reply]);
             replyOnReply.set(parentId, '');
             swicheed();
+            setChangeSwich(!changeSwich)
             setRenderCount(renderCount + 1);
             postStarScoreAxios(parentId);
             console.log("reply success");
@@ -123,8 +107,6 @@ export default function ReplyList({ parent }) {
             console.log("Delete failed... ", err);
         }
     }
-    
-    console.log(parent)
 
     function appendJustCreatedReply(newReply, parent) {
         if (!parent.listReply.includes(newReply))
@@ -133,40 +115,36 @@ export default function ReplyList({ parent }) {
 
     /*댓글 등록 체크 */
     function ReplyCheck(replyCheck=true){
-        if(replyCheck == true){
-            return <Button variant='primary' onClick={(e) => { markShowAddReply(e, parent.id)}}>댓글</Button>
-        } else {
-            return <Button variant='primary' onClick={(e) => { markShowChangeReply(e, parent.id)}}>수정</Button>
-        }
+        return replyCheck === true ? <Button variant='primary' onClick={(e) => { markShowAddReply(e, parent.id)}} >댓글</Button> 
+        : <Button variant='primary' onClick={(e) => { markShowChangeReply(e, parent.id)}}>수정</Button>
     }
-    //내 댓글 출력
-    function myReplyPrint(){
-        if (myReply == null){
-            return "";
-        } else {
-            return <li key={myReply.id}>
-                <StarRating style={""} totalStars={myReply.starScore} disabled={true}/> 
-                <p>작성자: <span>{myReply.writer ? myReply.writer.nick : ""}&nbsp;&nbsp;&nbsp;&nbsp;
-                 <span> 
-                    {DisplayDate(myReply.regDt, myReply.uptDt)} </span>
-                </span>
-                </p>
-                <p>
-                    <span>댓글 :{myReply.content} { myReply != null ? ReplyCheck(false) : ReplyCheck(true) }
+    
+    function replyToggle() {
+            return changeSwich === true ? myReply === null ? ReplyCheck(true):<ul>
+                <li key={myReply.id}>
+                    <StarRating totalStars={myReply.starScore} disabled={true} starScore={starScore} setStarScore={setStarScore}/>
+                    <p>작성자: <span>{myReply.writer ? myReply.writer.nick : ""}&nbsp;&nbsp;&nbsp;&nbsp; </span>
+                    <span>
+                    {DisplayDate(myReply.regDt, myReply.uptDt)}
                     </span>
-                </p> 
-                </li>
-        }
-
+                    </p>
+                    <p>
+                    <span>댓글 :{myReply.content} { myReply != null ? ReplyCheck(false) : "" }   </span>
+                    </p>
+                    </li>
+                </ul>
+                : openUpdateReply.has(parent.id) ?
+                    <UpdateReply auth={auth} parent={parent} starScore={starScore} setStarScore={setStarScore}
+                    onInputReplyContent={onInputReplyContent}  manageReply={manageReply} handleDelete={handleDelete} 
+                    myReply={myReply}/> : ""
     }
 
     // 댓글 출력 
     function replyRender(){        
         return <ul> 
-          {myReplyPrint()}
         {parent.listReply?.map((reply) => {
             return <li key={reply.id}>
-                <StarRating style={""} totalStars={reply.starScore} disabled={true}/> 
+                <StarRating totalStars={reply.starScore} disabled={true} starScore={reply.starScore} setStarScore={setStarScore}/> 
                 <p>작성자: <span>{reply.writer ? reply.writer.nick : ""}&nbsp;&nbsp;&nbsp;&nbsp;
                  <span> 
                     {DisplayDate(reply.regDt, reply.uptDt)} </span>
@@ -190,12 +168,9 @@ export default function ReplyList({ parent }) {
         
         {/* 로그인 했는지 체크 여부로 댓글창 띄우기 */}
         {openAddReply.has(parent.id) ?
-            <MngReply auth={auth} parent={parent} replyOnReply={replyOnReply} getStarScore={getStarScore}
+            <CreateReply auth={auth} parent={parent} replyOnReply={replyOnReply} starScore={starScore} setStarScore={setStarScore}
                 onInputReplyContent={onInputReplyContent} manageReply={manageReply} /> : ""}
-        {openUpdateReply.has(parent.id) ?
-            <UpdateReply auth={auth} parent={parent} getStarScore={getStarScore} bringStarScore={bringStarScore}
-            onInputReplyContent={onInputReplyContent} bringInputReplyContent={bringInputReplyContent} manageReply={manageReply}
-            handleDelete={handleDelete} bringInputStarScore={bringInputStarScore} /> : ""}
+        {replyToggle()}
         {replyRender()}
     </>
 }

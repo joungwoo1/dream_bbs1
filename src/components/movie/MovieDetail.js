@@ -1,27 +1,28 @@
+import StarRating from 'StarDraw/StarRating';
+import axios from 'api/axios';
+import ThumbnailList from 'atom/ThumbnailList';
 import AppContext from 'context/AppContextProvider';
-import { useContext, useEffect, useState } from 'react';
+import { useInterval } from 'hooks/useInterval';
+import { useContext, useState } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { DisplayDate, MembershipDate } from 'toolbox/DisplayDate';
 import { Fetch } from 'toolbox/Fetch';
-import ReplyList from './ReplyList';
-import ThumbnailList from 'atom/ThumbnailList';
-import StarRating from 'StarDraw/StarRating';
-import { useInterval } from 'hooks/useInterval';
-import axios from 'api/axios';
-import MovieDetailList from './PostShowMovieDetail';
+import PostShowMovieDetail from 'components/post/PostShowMovieDetail';
+import MovieList from './MovieList';
+import MyEval from './MyEval';
 
-export default function PostDetail() {
+export default function MovieDetail() {
     const location = useLocation();
     const { auth } = useContext(AppContext);
 
     const state = location.state;
-    
     // state={{ id: post.id, boardId: state.boardId, page: curPage, search: textSearch.current?.value, postListWithPaging }}>
 
     const [title, setTitle] = useState()
     const userId = auth.userId;
-    const postId = state.id;
-    const postUri = `http://localhost:8080/post/anonymous/getPost/${postId}/${userId}`;
+    const movieId = state.id;
+    const movieUri = `http://localhost:8080/movie/anonymous/getMovie/${movieId}/${userId}`;
+
 
     const interval = 5000; // 5초마다 함수 실행
     const isPaid = MembershipDate(auth.membership) >= 0;
@@ -32,7 +33,7 @@ export default function PostDetail() {
         if (!isPaid) {
             return;
         }
-        const bodyData = { userId: userId, movieId: postId, movieTitle: title, viewTime: interval };
+        const bodyData = { userId: userId, movieId: movieId, movieTitle: title, viewTime: interval };
         try {
             await axios.post("/user/anonymous/watchingMovie",
                 JSON.stringify(bodyData),
@@ -40,6 +41,7 @@ export default function PostDetail() {
                     headers: { 'Content-Type': 'application/json' }
                 }
             );
+            console.log("RecentMovie Update Success");
             console.log("RecentMovie Update Success");
         } catch (err) {
             console.log('RecentMovie Update Failed');
@@ -50,19 +52,19 @@ export default function PostDetail() {
     return <>
         {state.boardId ?
             <Link key={state.boardId} style={{ margin: '5px' }}
-                to={'/board'} state={state}>
+                to={'/board0000'} state={state}>
                 목록
             </Link> : auth.userName ?
                 <Link to='/recent-movie' style={{ margin: '5px' }}>목록</Link> :
                 <Link to='/' style={{ margin: '5px' }}>메인으로</Link>}
-        <Fetch uri={postUri} renderSuccess={RenderSuccess} />
+        <Fetch uri={movieUri} renderSuccess={RenderSuccess} />
     </>;
 
     
 
     function RenderSuccess(post) {
         return <>
-           {MovieDetailList(post.movieDTO?.id)}
+           {PostShowMovieDetail(post.movieDTO?.id)}
            {console.log()}
             {setTitle(post.title)}
             <br />
@@ -77,8 +79,9 @@ export default function PostDetail() {
                 {(post.writer ? post.writer.nick === auth.userNick : false) ?
                 <Link to="/post/managePost" state={{post, state}}>글수정</Link> : "" }
             <br/>
-
-            <ReplyList parent={post}/>
+            <MovieList/>
+            <MyEval/>
+            <otherE/>
             
 
         </>;
