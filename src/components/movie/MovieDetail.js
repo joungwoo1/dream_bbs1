@@ -62,22 +62,22 @@ export default function MovieDetail() {
 
     
 
-    function RenderSuccess(post) {
+    function RenderSuccess(movie) {
         return <>
-           {PostShowMovieDetail(post.movieDTO?.id)}
+           {PostShowMovieDetail(movie.movieDTO?.id)}
            {console.log()}
-            {setTitle(post.title)}
+            {setTitle(movie.title)}
             <br />
-            {isPaid ? <ThumbnailList imgDtoList={post.listAttachFile} /> : <th style={{ color: 'blue' }}>영화를 관람하시려면 멤버쉽 구독이 필요합니다.</th>}
+            {isPaid ? <ThumbnailList imgDtoList={movie.listAttachFile} /> : <th style={{ color: 'blue' }}>영화를 관람하시려면 멤버쉽 구독이 필요합니다.</th>}
 
             <h3>제목 : {title}</h3>
-            <p>줄거리 : {post.content}</p>
-                <p>조회수: <span>{post.readCnt}회</span>
-                <span> 개봉일: {DisplayDate(post.regDt, post.uptDt)} </span></p>
-                <div>등록닉네임 : {post.writer ? post.writer.nick : ""}&nbsp;&nbsp;&nbsp;&nbsp;별점: {post.starScore}점
+            <p>줄거리 : {movie.content}</p>
+                <p>조회수: <span>{movie.readCnt}회</span>
+                <span> 개봉일: {DisplayDate(movie.regDt, movie.uptDt)} </span></p>
+                <div>등록닉네임 : {movie.writer ? movie.writer.nick : ""}&nbsp;&nbsp;&nbsp;&nbsp;별점: {movie.starScore}점
                 <StarRating totalStars={1} starScore={1} float="left" disabled={true}/></div>
-                {(post.writer ? post.writer.nick === auth.userNick : false) ?
-                <Link to="/post/managePost" state={{post, state}}>글수정</Link> : "" }
+                {(movie.writer ? movie.writer.nick === auth.userNick : false) ?
+                <Link to="/movie/managemovie" state={{movie, state}}>글수정</Link> : "" }
             <br/>
             <MovieList/>
             <MyEval/>

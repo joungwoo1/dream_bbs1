@@ -19,7 +19,6 @@ export default function ReplyList({ parent }) {
     const [renderCount, setRenderCount] = useState(0);//조회수
     const [changeSwich, setChangeSwich] = useState(true);
 
-    console.log(myReply)
     //input 컨텐츠 값 받는 역할
     function onInputReplyContent(e, replyId) {
         const content = e.target.value;
@@ -112,11 +111,15 @@ export default function ReplyList({ parent }) {
         if (!parent.listReply.includes(newReply))
             parent.listReply = [...parent.listReply, newReply];
     }
-
+    console.log(auth)
     /*댓글 등록 체크 */
-    function ReplyCheck(replyCheck=true){
-        return replyCheck === true ? <Button variant='primary' onClick={(e) => { markShowAddReply(e, parent.id)}} >댓글</Button> 
-        : <Button variant='primary' onClick={(e) => { markShowChangeReply(e, parent.id)}}>수정</Button>
+    function ReplyCheck(replyCheck=true){ 
+        if (auth !== ""){
+            return replyCheck === true ? <Button variant='primary' onClick={(e) => { markShowAddReply(e, parent.id)}} >댓글</Button> 
+            : <Button variant='primary' onClick={(e) => { markShowChangeReply(e, parent.id)}}>수정</Button>
+        } else{
+            return ""
+        }
     }
     
     function replyToggle() {
@@ -162,7 +165,7 @@ export default function ReplyList({ parent }) {
     justCreatedReplyList.forEach((newReply) => { appendJustCreatedReply(newReply, parent) });
 
     return <>
-        {/* 초회 댓글인지 확인 */}
+        {/* 로그인 여부와 패널티 점수 체크 후 경고 */}
         {auth.userNick ? penalty >= 5 ? <th style={{ color: 'red' }}>
             지나친 경고 누적으로 인해 댓글 작성 권한이 박탈된 상태입니다.</th>:"" :""}
         

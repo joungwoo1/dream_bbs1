@@ -77,10 +77,7 @@ export default function PostDetail() {
                 {(post.writer ? post.writer.nick === auth.userNick : false) ?
                 <Link to="/post/managePost" state={{post, state}}>글수정</Link> : "" }
             <br/>
-
             <ReplyList parent={post}/>
-            
-
         </>;
     }
 }

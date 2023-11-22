@@ -37,7 +37,7 @@ function BBSNav() {
 
     const handleSubmit = (e, id) => {
         e.preventDefault();
-        navigate(`/board${id}`, {state : { boardId:id, page:1 }});
+        navigate(`/board0001`, {state : { boardId:id, page:1 }});
        
     }
     return (

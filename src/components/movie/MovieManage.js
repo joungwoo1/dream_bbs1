@@ -10,19 +10,19 @@ import { listAgeLimit, genreData } from "toolbox/MovieInfo";
 
 export default function MovieManage() {
     const location = useLocation();
-    // 신규작성 시 post.boardVO.id 활용, 수정 시 모든 정보 활용
+    // 신규작성 시 movie.boardVO.id 활용, 수정 시 모든 정보 활용
     const state = location.state?.state;
-    const post = location.state?.post;
+    const movie = location.state?.movie;
 
     const { auth } = useContext(AppContext);
     const navigate = useNavigate();
 
-    const [title, setTitle] = useState(post.title);
-    const [content, setContent] = useState(post.content);
-    const [listAttach, setListAttach] = useState(post.listAttachFile);
-	const [movieId, setMovieId] = useState(post.movieDTO?.id);
-    const [contentGenre, setContentGenre] = useState(post.genre);
-	const [ageLimit, setAgeLimit] = useState(post.ageLimit);
+    const [title, setTitle] = useState(movie.title);
+    const [content, setContent] = useState(movie.content);
+    const [listAttach, setListAttach] = useState(movie.listAttachFile);
+	const [movieId, setMovieId] = useState(movie.movieDTO?.id);
+    const [contentGenre, setContentGenre] = useState(movie.genre);
+	const [ageLimit, setAgeLimit] = useState(movie.ageLimit);
 
     const [hasAllContents, setHasAllContents] = useState();
     useEffect(() => {
@@ -59,14 +59,14 @@ export default function MovieManage() {
 
         const writer = { id: auth.userId, name: auth.userName, nick: auth.userNick };
 		const bodyData = {
-			id: post.id, writer: writer, title: title.trim(),
-			content: content.trim(), boardVO: { id: post.boardVO.id },
+			id: movie.id, writer: writer, title: title.trim(),
+			content: content.trim(), boardVO: { id: movie.boardVO.id },
 			genre: contentGenre, ageLimit: ageLimit, listAttachFile: listAttach
 		};
 
         try {
-            await axios.post(
-                "/post/managePost",
+            await axios.movie(
+                "/movie/manageMovie",
                 bodyData,
                 {
                     headers: {
@@ -75,10 +75,10 @@ export default function MovieManage() {
                     }
                 }
             );
-			console.log('post.id', post.id);
-            if (!post.id) {
+			console.log('movie.id', movie.id);
+            if (!movie.id) {
                 // 글쓰기
-                const ttt = { boardId: post.boardVO.id, page: 1, search: "" }
+                const ttt = { boardId: movie.boardVO.id, page: 1, search: "" }
                 navigate(`/board`, { state: ttt });
 			} else {
                 // 수정
@@ -95,7 +95,7 @@ export default function MovieManage() {
     const handleDelete = async (e) => {
         e.preventDefault();
         try {
-            await axios.delete(`/post/${post.id}`,
+            await axios.delete(`/movie/${movie.id}`,
                 {
                     headers: {
                         'Content-Type': 'application/json',
@@ -165,7 +165,7 @@ export default function MovieManage() {
                 required
             />
         </Form.Group>
-        <div key={`inline-checkbox`} className="mb-3" defaultChecked={post.genre}>
+        <div key={`inline-checkbox`} className="mb-3" defaultChecked={movie.genre}>
 		{genreHtml()}
 		</div>
 		{ageHtml()}
@@ -188,7 +188,7 @@ export default function MovieManage() {
             disabled={!hasAllContents}>
             등록
         </Button>
-        { post.id ?
+        { movie.id ?
         <Button variant="danger" onClick={handleDelete} style={{ float: 'right', margin: '10px' }}>
             삭제
         </Button>:""}
